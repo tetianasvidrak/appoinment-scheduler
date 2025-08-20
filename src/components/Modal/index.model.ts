@@ -3,3 +3,9 @@ export type ModalProps = {
   handlerClick: () => void;
   text?: string;
 };
+
+export type ModalState = {
+  type: "add" | "edit";
+  employeeId: string;
+  time: string;
+};

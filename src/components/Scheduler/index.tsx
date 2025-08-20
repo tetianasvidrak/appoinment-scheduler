@@ -4,6 +4,13 @@ import type { Employee } from "./index.model";
 import { DndContext, pointerWithin, type DragEndEvent } from "@dnd-kit/core";
 import { TimeSlot } from "../TimeSlot";
 import { Visit } from "../Visit";
+import { Modal } from "../Modal";
+import { AddVisitModal } from "../AddVisitModal";
+import { EditVisitModal } from "../EditVisitModal";
+import type { ModalState } from "../Modal/index.model";
+import type { VisitType } from "../Visit/index.model";
+import type { AddVisitModalState } from "../AddVisitModal/index.model";
+import type { EditVisitModalState } from "../EditVisitModal/index.model";
 
 function toMinutes(time: string) {
   const [h, m] = time.split(":").map(Number);
@@ -32,7 +39,9 @@ const employees: Employee[] = [
   { id: "emp-3", name: "Марія" },
 ];
 
-export default function Welcome() {
+export default function Scheduler() {
+  const [modal, setModal] = useState<ModalState | null>(null);
+  const [duration, setDuration] = useState<number>(15);
   const [visits, setVisits] = useState<VisitModel[]>([
     { id: "v1", employeeId: "emp-1", time: "09:00", duration: 30 },
     { id: "v2", employeeId: "emp-1", time: "11:00", duration: 45 },
@@ -92,7 +101,30 @@ export default function Welcome() {
     );
   };
 
-  const handlerClick = () => {};
+  const addVisit = (employeeId: string, time: string, duration: number) => {
+    if (!duration || duration < 15 || duration % 15 !== 0) {
+      alert("Тривалість має бути кратною 15 і не менше 15 хвилин");
+      return;
+    }
+    const visitSlots = duration / 15;
+    if (
+      [...Array(visitSlots).keys()].some((i) =>
+        isSlotOccupied(employeeId, minutesToTime(toMinutes(time) + i * 15))
+      )
+    ) {
+      alert("Слот зайнятий");
+      return;
+    }
+    const newVisit: VisitType = {
+      id: `v${Date.now()}`,
+      employeeId,
+      time,
+      duration,
+    };
+    setVisits((prev) => [...prev, newVisit]);
+    setModal(null);
+    setDuration(15);
+  };
 
   return (
     <div className="p-4">
@@ -116,14 +148,28 @@ export default function Welcome() {
                   employeeId={e.id}
                   time={time}
                   occupied={isSlotOccupied(e.id, time)}
-                  onClick={handlerClick}
+                  onClick={() => {
+                    setModal({ type: "add", employeeId: e.id, time });
+                  }}
                 >
                   {visits
                     .filter((v) => {
                       return v.employeeId === e.id && v.time === time;
                     })
                     .map((v) => (
-                      <Visit key={v.id} visit={v} onClick={handlerClick} />
+                      <Visit
+                        key={v.id}
+                        visit={v}
+                        onClick={(e) => {
+                          console.log("Visit clicked", v);
+                          e.stopPropagation();
+                          setModal({
+                            type: "edit",
+                            employeeId: v.employeeId,
+                            time: v.time,
+                          });
+                        }}
+                      />
                     ))}
                 </TimeSlot>
               ))}
@@ -131,6 +177,25 @@ export default function Welcome() {
           ))}
         </div>
       </DndContext>
+
+      {modal && (
+        <Modal handlerClick={() => setModal(null)}>
+          {modal.type === "edit" ? (
+            <EditVisitModal
+              employees={employees}
+              modal={modal as EditVisitModalState}
+            />
+          ) : modal.type === "add" ? (
+            <AddVisitModal
+              employees={employees}
+              modal={modal as AddVisitModalState}
+              addVisit={addVisit}
+              duration={duration}
+              onClose={() => setModal(null)}
+            />
+          ) : null}
+        </Modal>
+      )}
     </div>
   );
 }
