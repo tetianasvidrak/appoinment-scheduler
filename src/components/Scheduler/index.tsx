@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Appointment } from "./index.model";
+import type { VisitModel } from "./index.model";
 import type { Employee } from "./index.model";
 import { DndContext, pointerWithin, type DragEndEvent } from "@dnd-kit/core";
 import { TimeSlot } from "../TimeSlot";
@@ -33,7 +33,7 @@ const employees: Employee[] = [
 ];
 
 export default function Welcome() {
-  const [visits, setVisits] = useState<Appointment[]>([
+  const [visits, setVisits] = useState<VisitModel[]>([
     { id: "v1", employeeId: "emp-1", time: "09:00", duration: 30 },
     { id: "v2", employeeId: "emp-1", time: "11:00", duration: 45 },
     { id: "v3", employeeId: "emp-2", time: "10:00", duration: 60 },
@@ -92,6 +92,8 @@ export default function Welcome() {
     );
   };
 
+  const handlerClick = () => {};
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Календар працівників</h1>
@@ -114,15 +116,14 @@ export default function Welcome() {
                   employeeId={e.id}
                   time={time}
                   occupied={isSlotOccupied(e.id, time)}
-                  onClick={}
+                  onClick={handlerClick}
                 >
                   {visits
                     .filter((v) => {
-                      // Only render the visit at its starting time
                       return v.employeeId === e.id && v.time === time;
                     })
                     .map((v) => (
-                      <Visit key={v.id} visit={v} onClick={} />
+                      <Visit key={v.id} visit={v} onClick={handlerClick} />
                     ))}
                 </TimeSlot>
               ))}
