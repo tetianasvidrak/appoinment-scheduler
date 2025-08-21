@@ -1,4 +1,5 @@
 import type { AddVisitModalProps } from "./index.model";
+import { CheckboxServices } from "../CheckboxServices";
 
 export const AddVisitModal = ({
   employees,
@@ -11,15 +12,19 @@ export const AddVisitModal = ({
     <>
       {" "}
       <h2 className="text-xl font-semibold mb-2">New appointment</h2>
-      <div className="mb-5 w-md flex flex-col gap-3">
+      <div className="mb-5 w-md flex flex-col items-start gap-3">
         <p>
           Employee: {employees.find((e) => e.id === modal.employeeId)?.name}
         </p>
+        <CheckboxServices />
 
         <p>Time: {modal.time}</p>
         <p>Client: Maria Jose</p>
-        <label>Notes: </label>
-        <textarea className="p-2 bg-pink-100 border caret-pink-500 focus:outline-pink-500 rounded resize-none w-full"></textarea>
+
+        <textarea
+          placeholder="Notes"
+          className="p-2 bg-pink-100 border caret-pink-500 focus:outline-pink-500 rounded resize-none w-full"
+        ></textarea>
       </div>
       <div className="flex justify-end gap-3">
         <button

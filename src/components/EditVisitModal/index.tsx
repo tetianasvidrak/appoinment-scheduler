@@ -1,4 +1,5 @@
 import type { EditVisitModalProps } from "./index.model";
+import { CheckboxServices } from "../CheckboxServices";
 
 export const EditVisitModal = ({ employees, modal }: EditVisitModalProps) => {
   return (
@@ -9,17 +10,25 @@ export const EditVisitModal = ({ employees, modal }: EditVisitModalProps) => {
           Employee: {employees.find((e) => e.id === modal.employeeId)?.name}
         </p>
 
-        <p>Time: {modal.time}</p>
+        <CheckboxServices />
 
-        <label>Notes: </label>
-        <textarea className="p-2 bg-pink-100 border caret-pink-500 focus:outline-pink-500 rounded resize-none w-full"></textarea>
+        <p>Time: {modal.time}</p>
+        <p>Client: Maria Jose</p>
+
+        <textarea
+          placeholder="Notes"
+          className="p-2 bg-pink-100 border caret-pink-500 focus:outline-pink-500 rounded resize-none w-full"
+        ></textarea>
       </div>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded">
-        Save changes
-      </button>
-      <button className="ml-3 bg-gray-300 text-black px-4 py-2 rounded cursor-pointer">
-        Delete
-      </button>
+
+      <div className="flex justify-end gap-3">
+        <button className="bg-blue-500 text-white px-7 py-2 rounded cursor-pointer">
+          Save changes
+        </button>
+        <button className="bg-gray-300 text-black px-4 py-2 rounded cursor-pointer">
+          Delete
+        </button>
+      </div>
     </>
   );
 };
