@@ -7,10 +7,12 @@ import { Visit } from "../Visit";
 import { Modal } from "../Modal";
 import { AddVisitModal } from "../AddVisitModal";
 import { EditVisitModal } from "../EditVisitModal";
+import { Calendar } from "../Calendar";
 import type { ModalState } from "../Modal/index.model";
 import type { VisitType } from "../Visit/index.model";
 import type { AddVisitModalState } from "../AddVisitModal/index.model";
 import type { EditVisitModalState } from "../EditVisitModal/index.model";
+import dayjs, { Dayjs } from "dayjs";
 
 function toMinutes(time: string) {
   const [h, m] = time.split(":").map(Number);
@@ -34,12 +36,13 @@ const times = Array.from({ length: 40 }, (_, i) => {
 });
 
 const employees: Employee[] = [
-  { id: "emp-1", name: "Іван" },
-  { id: "emp-2", name: "Олег" },
-  { id: "emp-3", name: "Марія" },
+  { id: "emp-1", name: "Svitlana" },
+  { id: "emp-2", name: "Oksana" },
+  { id: "emp-3", name: "Alina" },
 ];
 
 export default function Scheduler() {
+  const [currentDate, setCurrentDate] = useState(dayjs());
   const [modal, setModal] = useState<ModalState | null>(null);
   const [duration, setDuration] = useState<number>(15);
   const [visits, setVisits] = useState<VisitModel[]>([
@@ -48,6 +51,9 @@ export default function Scheduler() {
     { id: "v3", employeeId: "emp-2", time: "10:00", duration: 60 },
     { id: "v4", employeeId: "emp-3", time: "14:30", duration: 15 },
   ]);
+
+  const showDate = currentDate.format("dddd, DD MMMM YYYY");
+  console.log("Current date:", showDate);
 
   const isSlotOccupied = (employeeId: string, time: string) => {
     const slotMinutes = toMinutes(time);
@@ -126,76 +132,90 @@ export default function Scheduler() {
     setDuration(15);
   };
 
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Календар працівників</h1>
-      <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin}>
-        <div className="grid grid-cols-4">
-          <div></div>
-          {employees.map((e) => (
-            <div key={e.id} className="text-center font-semibold text-lg">
-              {e.name}
-            </div>
-          ))}
-          {times.map((time) => (
-            <React.Fragment key={time}>
-              <div className="text-right pr-2 text-sm text-gray-500 border-b-orange-500">
-                {time}
-              </div>
-              {employees.map((e) => (
-                <TimeSlot
-                  key={e.id + time}
-                  employeeId={e.id}
-                  time={time}
-                  occupied={isSlotOccupied(e.id, time)}
-                  onClick={() => {
-                    setModal({ type: "add", employeeId: e.id, time });
-                  }}
-                >
-                  {visits
-                    .filter((v) => {
-                      return v.employeeId === e.id && v.time === time;
-                    })
-                    .map((v) => (
-                      <Visit
-                        key={v.id}
-                        visit={v}
-                        onClick={(e) => {
-                          console.log("Visit clicked", v);
-                          e.stopPropagation();
-                          setModal({
-                            type: "edit",
-                            employeeId: v.employeeId,
-                            time: v.time,
-                          });
-                        }}
-                      />
-                    ))}
-                </TimeSlot>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
-      </DndContext>
+  const onChangeDateHandler = (newDate: Dayjs | null) => {
+    setCurrentDate(newDate || dayjs());
+  };
 
-      {modal && (
-        <Modal handlerClick={() => setModal(null)}>
-          {modal.type === "edit" ? (
-            <EditVisitModal
-              employees={employees}
-              modal={modal as EditVisitModalState}
-            />
-          ) : modal.type === "add" ? (
-            <AddVisitModal
-              employees={employees}
-              modal={modal as AddVisitModalState}
-              addVisit={addVisit}
-              duration={duration}
-              onClose={() => setModal(null)}
-            />
-          ) : null}
-        </Modal>
-      )}
+  return (
+    <div className="flex gap-20 p-2">
+      <Calendar date={currentDate} onChange={onChangeDateHandler} />
+      <div className="w-full">
+        <div className="grid grid-cols-4">
+          <h1 className="col-start-1 text-xl font-normal mb-4">
+            {currentDate.format("dddd, DD")}
+          </h1>
+        </div>
+        <DndContext
+          onDragEnd={handleDragEnd}
+          collisionDetection={pointerWithin}
+        >
+          <div className="grid grid-cols-[auto_1fr_1fr_1fr]">
+            <div></div>
+            {employees.map((e) => (
+              <div key={e.id} className="text-center font-semibold text-lg">
+                {e.name}
+              </div>
+            ))}
+            {times.map((time) => (
+              <React.Fragment key={time}>
+                <div className="text-right pr-2 text-sm text-gray-500 border-b-orange-500">
+                  {time}
+                </div>
+                {employees.map((e) => (
+                  <TimeSlot
+                    key={e.id + time}
+                    employeeId={e.id}
+                    time={time}
+                    occupied={isSlotOccupied(e.id, time)}
+                    onClick={() => {
+                      setModal({ type: "add", employeeId: e.id, time });
+                    }}
+                  >
+                    {visits
+                      .filter((v) => {
+                        return v.employeeId === e.id && v.time === time;
+                      })
+                      .map((v) => (
+                        <Visit
+                          key={v.id}
+                          visit={v}
+                          onClick={(e) => {
+                            console.log("Visit clicked", v);
+                            e.stopPropagation();
+                            setModal({
+                              type: "edit",
+                              employeeId: v.employeeId,
+                              time: v.time,
+                            });
+                          }}
+                        />
+                      ))}
+                  </TimeSlot>
+                ))}
+              </React.Fragment>
+            ))}
+          </div>
+        </DndContext>
+
+        {modal && (
+          <Modal handlerClick={() => setModal(null)}>
+            {modal.type === "edit" ? (
+              <EditVisitModal
+                employees={employees}
+                modal={modal as EditVisitModalState}
+              />
+            ) : modal.type === "add" ? (
+              <AddVisitModal
+                employees={employees}
+                modal={modal as AddVisitModalState}
+                addVisit={addVisit}
+                duration={duration}
+                onClose={() => setModal(null)}
+              />
+            ) : null}
+          </Modal>
+        )}
+      </div>
     </div>
   );
 }
