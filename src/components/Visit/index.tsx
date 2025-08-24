@@ -5,6 +5,7 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: visit.id,
   });
+  console.log(visit);
 
   const style = {
     transform: transform
@@ -21,7 +22,7 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-blue-600 text-white text-xs px-2 py-1 rounded shadow w-full text-center relative"
+      className="bg-emerald-200 text-xs px-2 py-1 rounded shadow w-full text-center relative"
       onClick={onClick}
     >
       <div className="text-sm font-semibold">

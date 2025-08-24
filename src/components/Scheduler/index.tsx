@@ -7,6 +7,7 @@ import { Visit } from "../Visit";
 import { Modal } from "../Modal";
 import { AddVisitModal } from "../AddVisitModal";
 import { EditVisitModal } from "../EditVisitModal";
+import { Services } from "../Services";
 import { Calendar } from "../Calendar";
 import type { ModalState } from "../Modal/index.model";
 import type { VisitType } from "../Visit/index.model";
@@ -138,7 +139,10 @@ export default function Scheduler() {
 
   return (
     <div className="flex gap-20 p-2">
-      <Calendar date={currentDate} onChange={onChangeDateHandler} />
+      <div>
+        <Services />
+        <Calendar date={currentDate} onChange={onChangeDateHandler} />
+      </div>
       <div className="w-full">
         <div className="grid grid-cols-4">
           <h1 className="col-start-1 text-xl font-normal mb-4">

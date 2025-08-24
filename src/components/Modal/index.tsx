@@ -11,15 +11,7 @@ export const Modal = ({ children, handlerClick }: ModalProps) => {
           alt="close icon"
           onClick={handlerClick}
         />
-        <div className="flex flex-col gap-3 mx-6 my-6">
-          {children}
-          {/* <button
-            onClick={handlerClick}
-            className="ml-3 bg-gray-300 text-black px-4 py-2 rounded cursor-pointer"
-          >
-            {text}
-          </button> */}
-        </div>
+        <div className="flex flex-col gap-3 mx-6 my-2">{children}</div>
       </div>
     </div>
   );
