@@ -1,5 +1,4 @@
-import type { ServiceType } from "../Services/index.model";
-
+import type { ServiceType } from "../../model/service.model";
 export type ServiceListProps = {
   services: ServiceType[];
 };

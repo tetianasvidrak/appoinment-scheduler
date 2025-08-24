@@ -1,9 +1,11 @@
 import React from "react";
-import { ServiceList } from "../ServiceList";
 import { Typography, Button } from "@mui/material";
-import { Modal } from "../Modal";
+
 import { AddServiceModal } from "../AddServiceModal";
-import type { ServiceType } from "./index.model";
+import { Modal } from "../Modal";
+import { ServiceList } from "../ServiceList";
+
+import type { ServiceType } from "../../model/service.model";
 
 export const Services = () => {
   const [modal, setModal] = React.useState(false);

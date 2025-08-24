@@ -5,7 +5,6 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: visit.id,
   });
-  console.log(visit);
 
   const style = {
     transform: transform
@@ -29,11 +28,10 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
         {visit.time} ({visit.duration}хв)
       </div>
 
-      {/* Drag handle */}
       <div
         {...attributes}
         {...listeners}
-        onClick={(e) => e.stopPropagation()} // не передає клік візиту
+        onClick={(e) => e.stopPropagation()}
         className="absolute top-0 right-0 px-1 py-0.5 bg-white text-blue-600 text-[10px] rounded-bl cursor-grab"
       >
         ⠿

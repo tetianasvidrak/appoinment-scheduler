@@ -1,9 +1,4 @@
-export type VisitType = {
-  id: string;
-  employeeId: string;
-  time: string;
-  duration: number;
-};
+import type { VisitType } from "../../model/Visit.model";
 
 export type VisitProps = {
   visit: VisitType;

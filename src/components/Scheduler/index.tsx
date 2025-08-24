@@ -1,42 +1,29 @@
 import React, { useState } from "react";
-import type { VisitModel } from "./index.model";
-import type { Employee } from "./index.model";
+import dayjs, { Dayjs } from "dayjs";
 import { DndContext, pointerWithin, type DragEndEvent } from "@dnd-kit/core";
+
+import {
+  timeToMinutes,
+  minutesToTime,
+  generate15MinTimeSlots,
+} from "../../helpers/time";
+import { isSlotOccupied } from "./index.helper";
+
+import { AddVisitModal } from "../AddVisitModal";
+import { Calendar } from "../Calendar";
+import { EditVisitModal } from "../EditVisitModal";
+import { Modal } from "../Modal";
+import { Services } from "../Services";
 import { TimeSlot } from "../TimeSlot";
 import { Visit } from "../Visit";
-import { Modal } from "../Modal";
-import { AddVisitModal } from "../AddVisitModal";
-import { EditVisitModal } from "../EditVisitModal";
-import { Services } from "../Services";
-import { Calendar } from "../Calendar";
-import type { ModalState } from "../Modal/index.model";
-import type { VisitType } from "../Visit/index.model";
+
+import type { EmployeeType } from "../../model/employee.model";
 import type { AddVisitModalState } from "../AddVisitModal/index.model";
 import type { EditVisitModalState } from "../EditVisitModal/index.model";
-import dayjs, { Dayjs } from "dayjs";
+import type { ModalState } from "../Modal/index.model";
+import type { VisitType } from "../../model/Visit.model";
 
-function toMinutes(time: string) {
-  const [h, m] = time.split(":").map(Number);
-  return h * 60 + m;
-}
-
-function minutesToTime(mins: number) {
-  const h = Math.floor(mins / 60)
-    .toString()
-    .padStart(2, "0");
-  const m = (mins % 60).toString().padStart(2, "0");
-  return `${h}:${m}`;
-}
-
-const times = Array.from({ length: 40 }, (_, i) => {
-  const hours = Math.floor((9 * 60 + i * 15) / 60);
-  const minutes = (9 * 60 + i * 15) % 60;
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}`;
-});
-
-const employees: Employee[] = [
+const employees: EmployeeType[] = [
   { id: "emp-1", name: "Svitlana" },
   { id: "emp-2", name: "Oksana" },
   { id: "emp-3", name: "Alina" },
@@ -46,62 +33,41 @@ export default function Scheduler() {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [modal, setModal] = useState<ModalState | null>(null);
   const [duration, setDuration] = useState<number>(15);
-  const [visits, setVisits] = useState<VisitModel[]>([
+  const [visits, setVisits] = useState<VisitType[]>([
     { id: "v1", employeeId: "emp-1", time: "09:00", duration: 30 },
     { id: "v2", employeeId: "emp-1", time: "11:00", duration: 45 },
     { id: "v3", employeeId: "emp-2", time: "10:00", duration: 60 },
     { id: "v4", employeeId: "emp-3", time: "14:30", duration: 15 },
   ]);
-
-  const showDate = currentDate.format("dddd, DD MMMM YYYY");
-  console.log("Current date:", showDate);
-
-  const isSlotOccupied = (employeeId: string, time: string) => {
-    const slotMinutes = toMinutes(time);
-    return visits.some((v) => {
-      if (v.employeeId !== employeeId) return false;
-      const visitStart = toMinutes(v.time);
-      const visitEnd = visitStart + v.duration;
-      return slotMinutes >= visitStart && slotMinutes < visitEnd;
-    });
-  };
+  const times = generate15MinTimeSlots();
 
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log("FIRST");
     const { active, over } = event;
     if (!over) return;
-    console.log("SECOND", over);
 
     const visitId = active.id;
     const target = over.data.current;
     if (!target) return;
-    console.log("THIRD");
 
     const { employeeId, time } = target;
-    console.log(target);
     const movedVisit = visits.find((v) => v.id === visitId);
     if (!movedVisit) return;
-    console.log("FORTH");
 
-    // Check for overlap except for the dragged visit itself
     const durationSlots = movedVisit.duration / 15;
 
-    console.log("durationSlots", durationSlots);
     if (
       [...Array(durationSlots).keys()].some((i) => {
-        const slotTime = minutesToTime(toMinutes(time) + i * 15);
-        console.log("slotTime", slotTime);
+        const slotTime = minutesToTime(timeToMinutes(time) + i * 15);
         return visits.some(
           (v) =>
             v.id !== movedVisit.id &&
             v.employeeId === employeeId &&
-            toMinutes(slotTime) >= toMinutes(v.time) &&
-            toMinutes(slotTime) < toMinutes(v.time) + v.duration
+            timeToMinutes(slotTime) >= timeToMinutes(v.time) &&
+            timeToMinutes(slotTime) < timeToMinutes(v.time) + v.duration
         );
       })
     )
       return;
-    console.log("FIFTH");
 
     setVisits((prev) =>
       prev.map((v) => (v.id === visitId ? { ...v, employeeId, time } : v))
@@ -116,7 +82,11 @@ export default function Scheduler() {
     const visitSlots = duration / 15;
     if (
       [...Array(visitSlots).keys()].some((i) =>
-        isSlotOccupied(employeeId, minutesToTime(toMinutes(time) + i * 15))
+        isSlotOccupied(
+          visits,
+          employeeId,
+          minutesToTime(timeToMinutes(time) + i * 15)
+        )
       )
     ) {
       alert("Слот зайнятий");
@@ -170,7 +140,7 @@ export default function Scheduler() {
                     key={e.id + time}
                     employeeId={e.id}
                     time={time}
-                    occupied={isSlotOccupied(e.id, time)}
+                    occupied={isSlotOccupied(visits, e.id, time)}
                     onClick={() => {
                       setModal({ type: "add", employeeId: e.id, time });
                     }}
@@ -184,7 +154,6 @@ export default function Scheduler() {
                           key={v.id}
                           visit={v}
                           onClick={(e) => {
-                            console.log("Visit clicked", v);
                             e.stopPropagation();
                             setModal({
                               type: "edit",

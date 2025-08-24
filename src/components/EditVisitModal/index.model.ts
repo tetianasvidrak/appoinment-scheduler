@@ -1,4 +1,4 @@
-import type { Employee } from "../Scheduler/index.model";
+import type { EmployeeType } from "../../model/employee.model";
 import type { ModalState } from "../Modal/index.model";
 
 export interface EditVisitModalState extends ModalState {
@@ -6,6 +6,6 @@ export interface EditVisitModalState extends ModalState {
 }
 
 export type EditVisitModalProps = {
-  employees: Employee[];
+  employees: EmployeeType[];
   modal: EditVisitModalState;
 };

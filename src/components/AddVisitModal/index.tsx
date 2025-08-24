@@ -1,5 +1,6 @@
-import type { AddVisitModalProps } from "./index.model";
 import { CheckboxServices } from "../CheckboxServices";
+
+import type { AddVisitModalProps } from "./index.model";
 
 export const AddVisitModal = ({
   employees,

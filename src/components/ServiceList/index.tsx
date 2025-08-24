@@ -1,9 +1,10 @@
 import { Card, CardContent, Typography, List, ListItem } from "@mui/material";
-import type { ServiceListProps } from "./index.module";
-import type { Category } from "../AddServiceModal/index.model.ts";
-import type { ServiceType } from "../Services/index.model.ts";
 
-const categories: Category[] = [
+import type { CategoryType } from "../../model/category.model";
+import type { ServiceType } from "../../model/service.model";
+import type { ServiceListProps } from "./index.model";
+
+const categories: CategoryType[] = [
   { id: "1", name: "Manicure" },
   { id: "2", name: "Pedicure" },
   { id: "3", name: "Treatment" },

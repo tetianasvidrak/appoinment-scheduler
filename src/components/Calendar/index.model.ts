@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 
-export type CalendatType = {
+export type CalendarProps = {
   date?: Dayjs | null;
   onChange: (newDate: Dayjs | null) => void;
 };

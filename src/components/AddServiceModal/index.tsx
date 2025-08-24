@@ -1,8 +1,9 @@
-import { Button, MenuItem, TextField } from "@mui/material";
 import { useState } from "react";
 import type { ChangeEvent } from "react";
+import { Button, MenuItem, TextField } from "@mui/material";
+
 import type { AddServiceModalProps } from "./index.model.ts";
-import type { Category } from "./index.model.ts";
+import type { CategoryType } from "../../model/category.model.ts";
 
 export const AddServiceModal = ({ onAdd, onSubmit }: AddServiceModalProps) => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export const AddServiceModal = ({ onAdd, onSubmit }: AddServiceModalProps) => {
     price: "",
   });
 
-  const categories: Category[] = [
+  const categories: CategoryType[] = [
     { id: "1", name: "Manicure" },
     { id: "2", name: "Pedicure" },
     { id: "3", name: "Treatment" },
@@ -56,7 +57,7 @@ export const AddServiceModal = ({ onAdd, onSubmit }: AddServiceModalProps) => {
                   disableScrollLock: true,
                   PaperProps: {
                     sx: {
-                      maxHeight: 200, // 👈 висота списку (px)
+                      maxHeight: 200,
                       overflowY: "auto",
                     },
                   },

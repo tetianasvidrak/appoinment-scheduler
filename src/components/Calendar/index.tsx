@@ -3,9 +3,10 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import type { CalendatType } from "./index.model";
 
-export const Calendar = ({ date, onChange }: CalendatType) => {
+import type { CalendarProps } from "./index.model";
+
+export const Calendar = ({ date, onChange }: CalendarProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
