@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router";
 import "./App.css";
-import Scheduler from "./components/Scheduler/index.tsx";
+import { Dashboard } from "./pages/Dashboard/index.tsx";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Scheduler />} />
+      <Route path="/" element={<Dashboard />} />
     </Routes>
   );
 }

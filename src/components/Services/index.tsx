@@ -9,11 +9,35 @@ import type { ServiceType } from "../../model/service.model";
 
 export const Services = () => {
   const [modal, setModal] = React.useState(false);
-  const [services, setServices] = React.useState<ServiceType[]>([]);
+  const [services, setServices] = React.useState<ServiceType[]>([
+    {
+      id: "semi-permanente",
+      category: "1",
+      service: "semi-permanente",
+      duration: "0:30",
+      price: "200",
+    },
+  ]);
+  const durations = ["0:30", "1:00", "1:30", "2:00", "2:30", "3:00"];
 
   const addService = (service: ServiceType) => {
     setServices([...services, service]);
   };
+
+  const editService = (id: string, data: Partial<ServiceType>) => {
+    setServices((prevServices) =>
+      prevServices.map((service) =>
+        service.id === id ? { ...service, ...data } : service
+      )
+    );
+  };
+
+  const deleteService = (id: string) => {
+    setServices((prevServices) =>
+      prevServices.filter((service) => service.id !== id)
+    );
+  };
+
   return (
     <>
       <div className="flex items-center justify-between mb-2">
@@ -31,12 +55,18 @@ export const Services = () => {
       {modal && (
         <Modal handlerClick={() => setModal(false)}>
           <AddServiceModal
+            durationOptions={durations}
             onAdd={addService}
             onSubmit={() => setModal(false)}
           />
         </Modal>
       )}
-      <ServiceList services={services} />
+      <ServiceList
+        services={services}
+        durationOptions={durations}
+        onEdit={editService}
+        onDelete={deleteService}
+      />
     </>
   );
 };

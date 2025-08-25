@@ -1,41 +1,33 @@
 import { useState } from "react";
-import type { ChangeEvent } from "react";
 import { Button, MenuItem, TextField } from "@mui/material";
 
-import type { AddServiceModalProps } from "./index.model.ts";
-import type { CategoryType } from "../../model/category.model.ts";
+import { Modal } from "../Modal";
 
-export const AddServiceModal = ({
+import type { EditServiceModalProps } from "./index.model";
+
+export const EditServiceModal = ({
+  service,
   durationOptions,
-  onAdd,
-  onSubmit,
-}: AddServiceModalProps) => {
-  const [formData, setFormData] = useState({
-    category: "",
-    service: "",
-    duration: "",
-    price: "",
-  });
+  categories,
+  onEdit,
+  onDelete,
+}: EditServiceModalProps) => {
+  const [modalDelete, setModalDelete] = useState(false);
+  const [formData, setFormData] = useState(
+    service || {
+      service: "",
+      price: "",
+      duration: "",
+      category: "",
+    }
+  );
 
-  const categories: CategoryType[] = [
-    { id: "1", name: "Manicure" },
-    { id: "2", name: "Pedicure" },
-    { id: "3", name: "Treatment" },
-    { id: "4", name: "Podology" },
-    { id: "5", name: "Rest time" },
-    { id: "6", name: "Own time" },
-    { id: "7", name: "Holidays" },
-  ];
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
-
-  const handleSubmit = () => {
-    onAdd(formData);
-    onSubmit();
-  };
-
   return (
     <>
       <div className="w-96 flex flex-col gap-4 my-4">
@@ -68,7 +60,7 @@ export const AddServiceModal = ({
               },
             }}
           >
-            {categories.map((option) => (
+            {categories?.map((option) => (
               <MenuItem key={option.id} value={option.id}>
                 {option.name}
               </MenuItem>
@@ -116,7 +108,7 @@ export const AddServiceModal = ({
               },
             }}
           >
-            {durationOptions.map((option) => (
+            {durationOptions?.map((option) => (
               <MenuItem key={option} value={option}>
                 {option}
               </MenuItem>
@@ -143,13 +135,47 @@ export const AddServiceModal = ({
         </div>
       </div>
       <div className="flex justify-end gap-3">
-        <Button variant="outlined" onClick={() => console.log("Cancel")}>
-          Cancel
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setModalDelete(true);
+          }}
+        >
+          Delete
         </Button>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onEdit(service.id, formData)}
+        >
           Save
         </Button>
       </div>
+      {modalDelete && (
+        <Modal handlerClick={() => setModalDelete(false)}>
+          <div className="flex flex-col items-center gap-6 p-4">
+            <p>Are you sure you want to delete this service?</p>
+            <div className="flex gap-4">
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setModalDelete(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  onDelete(service.id);
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
