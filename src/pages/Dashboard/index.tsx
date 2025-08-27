@@ -3,6 +3,7 @@ import { Calendar } from "../../components/Calendar";
 import Scheduler from "../../components/Scheduler";
 import { Services } from "../../components/Services";
 import dayjs, { Dayjs } from "dayjs";
+import { Clients } from "../../components/Clients";
 
 export const Dashboard = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -17,6 +18,7 @@ export const Dashboard = () => {
         <div>
           <Services />
           <Calendar date={currentDate} onChange={onChangeDateHandler} />
+          <Clients />
         </div>
         <Scheduler />
       </div>

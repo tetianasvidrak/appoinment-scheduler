@@ -11,6 +11,7 @@ export const AddServiceModal = ({
   onSubmit,
 }: AddServiceModalProps) => {
   const [formData, setFormData] = useState({
+    id: "",
     category: "",
     service: "",
     duration: "",

@@ -5,7 +5,7 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: visit.id,
   });
-
+  console.log(visit);
   const style = {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
