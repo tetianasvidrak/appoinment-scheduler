@@ -3,7 +3,7 @@ import type { ChangeEvent } from "react";
 import { Button, MenuItem, TextField } from "@mui/material";
 
 import type { AddServiceModalProps } from "./index.model.ts";
-import type { CategoryType } from "../../model/category.model.ts";
+import { categories } from "../../data/categories.ts";
 
 export const AddServiceModal = ({
   durationOptions,
@@ -14,19 +14,10 @@ export const AddServiceModal = ({
     id: "",
     categoryId: "",
     name: "",
-    duration: 0,
+    duration: 30,
     price: "",
   });
-
-  const categories: CategoryType[] = [
-    { id: "1", name: "Manicure" },
-    { id: "2", name: "Pedicure" },
-    { id: "3", name: "Treatment" },
-    { id: "4", name: "Podology" },
-    { id: "5", name: "Rest time" },
-    { id: "6", name: "Own time" },
-    { id: "7", name: "Holidays" },
-  ];
+  console.log(formData);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,7 +36,7 @@ export const AddServiceModal = ({
           <TextField
             select
             size="small"
-            name="category"
+            name="categoryId"
             value={formData.categoryId}
             onChange={handleChange}
             sx={{
