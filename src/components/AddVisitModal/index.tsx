@@ -1,14 +1,23 @@
+import { useEffect, useState } from "react";
 import { CheckboxServices } from "../CheckboxServices";
 
 import type { AddVisitModalProps } from "./index.model";
+import type { ServiceType } from "../../model/service.model";
 
 export const AddVisitModal = ({
   employees,
   modal,
   addVisit,
-  duration,
   onClose,
 }: AddVisitModalProps) => {
+  const [services, setServices] = useState<ServiceType[]>([]);
+  const [duration, setDuration] = useState<number>(0);
+
+  useEffect(() => {
+    const total = services.reduce((acc, service) => acc + service.duration, 0);
+    setDuration(total);
+  }, [services]);
+
   return (
     <>
       {" "}
@@ -17,7 +26,7 @@ export const AddVisitModal = ({
         <p>
           Employee: {employees.find((e) => e.id === modal.employeeId)?.name}
         </p>
-        <CheckboxServices />
+        <CheckboxServices selected={services} onChange={setServices} />
 
         <p>Time: {modal.time}</p>
         <p>Client: Maria Jose</p>
@@ -29,7 +38,9 @@ export const AddVisitModal = ({
       </div>
       <div className="flex justify-end gap-3">
         <button
-          onClick={() => addVisit(modal.employeeId, modal.time, duration)}
+          onClick={() =>
+            addVisit(modal.employeeId, modal.time, duration, services)
+          }
           className="bg-blue-500 text-white px-7 py-2 rounded cursor-pointer"
         >
           Add

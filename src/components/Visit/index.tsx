@@ -1,3 +1,4 @@
+// import { services } from "../../data/services";
 import type { VisitProps } from "./index.model";
 import { useDraggable } from "@dnd-kit/core";
 
@@ -5,7 +6,6 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: visit.id,
   });
-  console.log(visit);
   const style = {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
@@ -17,16 +17,31 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
     cursor: "pointer",
   };
 
+  const totalMinutes = visit.services.reduce(
+    (acc, curr) => acc + curr.duration,
+    0
+  );
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-emerald-200 text-xs px-2 py-1 rounded shadow w-full text-center relative"
+      className="bg-[#E8F1FF] text-xs px-2 py-1 rounded shadow w-full relative"
       onClick={onClick}
     >
-      <div className="text-sm font-semibold">
-        {visit.time} ({visit.duration}хв)
+      <div className="text-sx font-semibold">
+        {visit.time} ({hours} hour {minutes} min)
       </div>
+      {visit.services.map((service) => (
+        <p key={service.id} className="text-xs font-semibold">
+          {service.name} ({service.duration}хв)
+        </p>
+      ))}
+      <p>
+        Загальний час : {hours} год {minutes} хв
+      </p>
 
       <div
         {...attributes}

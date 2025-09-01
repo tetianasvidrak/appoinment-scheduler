@@ -4,26 +4,28 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
+import { services } from "../../data/services";
+
+import type { CheckboxServicesProps } from "./index.model";
+
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const top100Films = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-  { title: "The Dark Knight", year: 2008 },
-  { title: "12 Angry Men", year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-];
-
-export const CheckboxServices = () => {
+export const CheckboxServices = ({
+  selected,
+  onChange,
+}: CheckboxServicesProps) => {
   return (
     <Autocomplete
       multiple
       id="checkboxes-tags-demo"
-      options={top100Films}
+      options={services}
       disableCloseOnSelect
-      getOptionLabel={(option) => option.title}
+      getOptionLabel={(option) => option.name}
+      value={selected}
+      onChange={(event, newValue) => {
+        onChange(newValue);
+      }}
       renderOption={(props, option, { selected }) => {
         const { key, ...optionProps } = props;
         return (
@@ -34,7 +36,7 @@ export const CheckboxServices = () => {
               style={{ marginRight: 8 }}
               checked={selected}
             />
-            {option.title}
+            {option.name}
           </li>
         );
       }}

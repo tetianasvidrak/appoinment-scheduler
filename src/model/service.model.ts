@@ -1,7 +1,7 @@
 export type ServiceType = {
   id: string;
-  category: string;
-  service: string;
-  duration: string;
+  categoryId: string;
+  name: string;
+  duration: number;
   price: string;
 };

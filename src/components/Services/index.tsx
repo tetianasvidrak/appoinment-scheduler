@@ -6,19 +6,27 @@ import { Modal } from "../Modal";
 import { ServiceList } from "../ServiceList";
 
 import type { ServiceType } from "../../model/service.model";
+import type { DurationOption } from "../../model/duration.model";
 
 export const Services = () => {
   const [modal, setModal] = React.useState(false);
   const [services, setServices] = React.useState<ServiceType[]>([
     {
       id: "semi-permanente",
-      category: "1",
-      service: "semi-permanente",
-      duration: "0:30",
+      categoryId: "1",
+      name: "semi-permanente",
+      duration: 30,
       price: "200",
     },
   ]);
-  const durations = ["0:30", "1:00", "1:30", "2:00", "2:30", "3:00"];
+  const durationOptions: DurationOption[] = [
+    { label: "0:30", value: 30 },
+    { label: "1:00", value: 60 },
+    { label: "1:30", value: 90 },
+    { label: "2:00", value: 120 },
+    { label: "2:30", value: 150 },
+    { label: "3:00", value: 180 },
+  ];
 
   const addService = (service: ServiceType) => {
     setServices([...services, service]);
@@ -55,7 +63,7 @@ export const Services = () => {
       {modal && (
         <Modal handlerClick={() => setModal(false)}>
           <AddServiceModal
-            durationOptions={durations}
+            durationOptions={durationOptions}
             onAdd={addService}
             onSubmit={() => setModal(false)}
           />
@@ -63,7 +71,7 @@ export const Services = () => {
       )}
       <ServiceList
         services={services}
-        durationOptions={durations}
+        durationOptions={durationOptions}
         onEdit={editService}
         onDelete={deleteService}
       />

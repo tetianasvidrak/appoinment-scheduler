@@ -12,9 +12,9 @@ export const AddServiceModal = ({
 }: AddServiceModalProps) => {
   const [formData, setFormData] = useState({
     id: "",
-    category: "",
-    service: "",
-    duration: "",
+    categoryId: "",
+    name: "",
+    duration: 0,
     price: "",
   });
 
@@ -46,7 +46,7 @@ export const AddServiceModal = ({
             select
             size="small"
             name="category"
-            value={formData.category}
+            value={formData.categoryId}
             onChange={handleChange}
             sx={{
               width: "70%",
@@ -82,7 +82,7 @@ export const AddServiceModal = ({
           <TextField
             name="service"
             size="small"
-            value={formData.service}
+            value={formData.name}
             onChange={handleChange}
             sx={{
               width: "70%",
@@ -118,8 +118,8 @@ export const AddServiceModal = ({
             }}
           >
             {durationOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
           </TextField>

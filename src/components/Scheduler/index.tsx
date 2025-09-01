@@ -20,6 +20,7 @@ import type { AddVisitModalState } from "../AddVisitModal/index.model";
 import type { EditVisitModalState } from "../EditVisitModal/index.model";
 import type { ModalState } from "../Modal/index.model";
 import type { VisitType } from "../../model/Visit.model";
+import type { ServiceType } from "../../model/service.model";
 
 const employees: EmployeeType[] = [
   { id: "emp-1", name: "Svitlana" },
@@ -30,12 +31,52 @@ const employees: EmployeeType[] = [
 export default function Scheduler() {
   const [currentDate] = useState(dayjs());
   const [modal, setModal] = useState<ModalState | null>(null);
-  const [duration, setDuration] = useState<number>(15);
+  // const [duration, setDuration] = useState<number>(15);
   const [visits, setVisits] = useState<VisitType[]>([
-    { id: "v1", employeeId: "emp-1", time: "09:00", duration: 30 },
-    { id: "v2", employeeId: "emp-1", time: "11:00", duration: 45 },
-    { id: "v3", employeeId: "emp-2", time: "10:00", duration: 60 },
-    { id: "v4", employeeId: "emp-3", time: "14:30", duration: 15 },
+    {
+      id: "v1",
+      employeeId: "emp-1",
+      time: "09:00",
+      duration: 30,
+      services: [
+        {
+          id: "1",
+          categoryId: "1",
+          name: "Manicura SIN esmalte",
+          price: "13",
+          duration: 60,
+        },
+        {
+          id: "2",
+          categoryId: "1",
+          name: "Manicura con esmalte permanente",
+          price: "23",
+          duration: 90,
+        },
+      ],
+    },
+    {
+      id: "v2",
+      employeeId: "emp-1",
+      time: "11:00",
+      duration: 45,
+      services: [
+        {
+          id: "1",
+          categoryId: "1",
+          name: "Manicura SIN esmalte",
+          price: "13",
+          duration: 60,
+        },
+        {
+          id: "2",
+          categoryId: "1",
+          name: "Manicura con esmalte permanente",
+          price: "23",
+          duration: 90,
+        },
+      ],
+    },
   ]);
   const times = generate15MinTimeSlots();
 
@@ -72,7 +113,12 @@ export default function Scheduler() {
     );
   };
 
-  const addVisit = (employeeId: string, time: string, duration: number) => {
+  const addVisit = (
+    employeeId: string,
+    time: string,
+    duration: number,
+    services: ServiceType[]
+  ) => {
     if (!duration || duration < 15 || duration % 15 !== 0) {
       alert("Тривалість має бути кратною 15 і не менше 15 хвилин");
       return;
@@ -95,10 +141,10 @@ export default function Scheduler() {
       employeeId,
       time,
       duration,
+      services,
     };
     setVisits((prev) => [...prev, newVisit]);
     setModal(null);
-    setDuration(15);
   };
 
   return (
@@ -168,7 +214,7 @@ export default function Scheduler() {
               employees={employees}
               modal={modal as AddVisitModalState}
               addVisit={addVisit}
-              duration={duration}
+              // duration={duration}
               onClose={() => setModal(null)}
             />
           ) : null}
