@@ -3,20 +3,10 @@ import { Card, CardContent, Typography, List, ListItem } from "@mui/material";
 
 import { Modal } from "../Modal";
 import { EditServiceModal } from "../EditServiceModal";
+import { categories } from "../../data/categories";
 
-import type { CategoryType } from "../../model/category.model";
 import type { ServiceType } from "../../model/service.model";
 import type { ServiceListProps } from "./index.model";
-
-const categories: CategoryType[] = [
-  { id: "1", name: "Manicure" },
-  { id: "2", name: "Pedicure" },
-  { id: "3", name: "Treatment" },
-  { id: "4", name: "Podology" },
-  { id: "5", name: "Rest time" },
-  { id: "6", name: "Own time" },
-  { id: "7", name: "Holidays" },
-];
 
 export const ServiceList = ({
   durationOptions,
@@ -35,16 +25,20 @@ export const ServiceList = ({
         <CardContent>
           {categories.map((category) => {
             const categoryServices = services.filter(
-              (service: ServiceType) => service.category === category.id
+              (service: ServiceType) => service.categoryId === category.id
             );
 
             return (
-              <div key={category.id}>
+              <div
+                key={category.id}
+                style={{ backgroundColor: `#${category.displayColor}` }}
+                className="mb-1 p-2 rounded"
+              >
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                   {category.name}
                 </Typography>
 
-                <List>
+                <List style={{ padding: 0 }}>
                   {categoryServices.map((service) => (
                     <ListItem
                       key={service.id}
@@ -53,11 +47,24 @@ export const ServiceList = ({
                         justifyContent: "space-between",
                         py: 0.5,
                         cursor: "pointer",
+                        transition:
+                          "background-color 0.3s ease, box-shadow 0.3s ease",
+                        "&:hover": {
+                          backgroundColor: "rgba(255,255,255,0.15)",
+                          boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+                        },
+                        borderRadius: "10px",
                       }}
                       onClick={() => setSelectedService(service)}
                     >
-                      <span>{service.service}</span>
-                      <span>{service.duration}</span>
+                      <span>{service.name}</span>
+                      <span>
+                        {
+                          durationOptions.find(
+                            (option) => option.value === service.duration
+                          )?.label
+                        }
+                      </span>
                     </ListItem>
                   ))}
                 </List>

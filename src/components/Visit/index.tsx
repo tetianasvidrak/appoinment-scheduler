@@ -1,6 +1,7 @@
 // import { services } from "../../data/services";
 import type { VisitProps } from "./index.model";
 import { useDraggable } from "@dnd-kit/core";
+import { categories } from "../../data/categories";
 
 export const Visit = ({ visit, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -24,24 +25,37 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
+  const totalPrice = visit.services.reduce((acc, curr) => {
+    return acc + Number(curr.price);
+  }, 0);
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-[#E8F1FF] text-xs px-2 py-1 rounded shadow w-full relative"
+      className="border border-[#cbd5e1] bg-[#E6F0FF] text-xs px-2 py-1 shadow rounded w-full relative"
       onClick={onClick}
     >
-      <div className="text-sx font-semibold">
+      <div className="text-sm font-semibold mb-2">
         {visit.time} ({hours} hour {minutes} min)
       </div>
-      {visit.services.map((service) => (
-        <p key={service.id} className="text-xs font-semibold">
-          {service.name} ({service.duration}хв)
-        </p>
-      ))}
-      <p>
-        Загальний час : {hours} год {minutes} хв
-      </p>
+
+      {visit.services.map((service) => {
+        const category = categories.find((c) => c.id === service.categoryId);
+
+        return (
+          <p
+            key={service.id}
+            className="text-sm font-semibold px-2 py-2 rounded mb-1 shadow"
+            style={{
+              backgroundColor: `#${category?.displayColor}`,
+            }}
+          >
+            {service.name} ({service.duration} хв)
+          </p>
+        );
+      })}
+      <p className="text-sm">Total: {totalPrice} &euro;</p>
 
       <div
         {...attributes}

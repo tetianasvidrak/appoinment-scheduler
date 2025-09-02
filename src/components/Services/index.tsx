@@ -6,7 +6,7 @@ import { Modal } from "../Modal";
 import { ServiceList } from "../ServiceList";
 
 import type { ServiceType } from "../../model/service.model";
-import type { DurationOption } from "../../model/duration.model";
+import { durationOptions } from "../../constants/durationOptions";
 
 export const Services = () => {
   const [modal, setModal] = React.useState(false);
@@ -16,17 +16,9 @@ export const Services = () => {
       categoryId: "1",
       name: "semi-permanente",
       duration: 30,
-      price: "200",
+      price: "30",
     },
   ]);
-  const durationOptions: DurationOption[] = [
-    { label: "0:30", value: 30 },
-    { label: "1:00", value: 60 },
-    { label: "1:30", value: 90 },
-    { label: "2:00", value: 120 },
-    { label: "2:30", value: 150 },
-    { label: "3:00", value: 180 },
-  ];
 
   const addService = (service: ServiceType) => {
     setServices([...services, service]);

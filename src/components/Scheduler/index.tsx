@@ -37,7 +37,7 @@ export default function Scheduler() {
       id: "v1",
       employeeId: "emp-1",
       time: "09:00",
-      duration: 30,
+      duration: 150,
       services: [
         {
           id: "1",
@@ -58,8 +58,8 @@ export default function Scheduler() {
     {
       id: "v2",
       employeeId: "emp-1",
-      time: "11:00",
-      duration: 45,
+      time: "12:00",
+      duration: 150,
       services: [
         {
           id: "1",

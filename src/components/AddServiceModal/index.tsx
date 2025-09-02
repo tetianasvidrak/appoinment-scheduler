@@ -71,7 +71,7 @@ export const AddServiceModal = ({
         <div className="flex items-center gap-2">
           <label className="block font-medium">Service:</label>
           <TextField
-            name="service"
+            name="name"
             size="small"
             value={formData.name}
             onChange={handleChange}

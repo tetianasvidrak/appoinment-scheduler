@@ -15,10 +15,10 @@ export const EditServiceModal = ({
   const [modalDelete, setModalDelete] = useState(false);
   const [formData, setFormData] = useState(
     service || {
-      service: "",
+      name: "",
       price: "",
       duration: "",
-      category: "",
+      categoryId: "",
     }
   );
 
@@ -36,8 +36,8 @@ export const EditServiceModal = ({
           <TextField
             select
             size="small"
-            name="category"
-            value={formData.category}
+            name="categoryId"
+            value={formData.categoryId}
             onChange={handleChange}
             sx={{
               width: "70%",
@@ -71,9 +71,9 @@ export const EditServiceModal = ({
         <div className="flex items-center gap-2">
           <label className="block font-medium">Service:</label>
           <TextField
-            name="service"
+            name="name"
             size="small"
-            value={formData.service}
+            value={formData.name}
             onChange={handleChange}
             sx={{
               width: "70%",
@@ -108,9 +108,9 @@ export const EditServiceModal = ({
               },
             }}
           >
-            {durationOptions?.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+            {durationOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
           </TextField>

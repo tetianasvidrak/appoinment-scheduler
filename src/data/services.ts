@@ -159,7 +159,7 @@ export const services = [
   },
   {
     id: "26",
-    categoryId: "2",
+    categoryId: "4",
     name: "Pedicura especializada",
     price: "40",
     duration: 90,
@@ -180,7 +180,7 @@ export const services = [
   },
   {
     id: "29",
-    categoryId: "2",
+    categoryId: "4",
     name: "Tratamiento de uñas encarnadas",
     price: "10",
     duration: 60,
@@ -209,7 +209,7 @@ export const services = [
 
   {
     id: "33",
-    categoryId: "3",
+    categoryId: "5",
     name: "Lifting tinte de pestañas",
     price: "40",
     duration: 60,
@@ -217,14 +217,14 @@ export const services = [
 
   {
     id: "34",
-    categoryId: "4",
+    categoryId: "6",
     name: "Depilacion de cejas",
     price: "6",
     duration: 15,
   },
   {
     id: "35",
-    categoryId: "4",
+    categoryId: "6",
     name: "Depilacion del labio superior",
     price: "3",
     duration: 15,
