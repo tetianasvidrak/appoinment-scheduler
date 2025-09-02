@@ -39,7 +39,6 @@ export const EditServiceModal = ({
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
     onEdit(service.id, {
       ...data,
       duration: Number(data.duration),

@@ -4,5 +4,5 @@ import type { DurationOption } from "../../model/duration.model";
 export type AddServiceModalProps = {
   durationOptions: DurationOption[];
   onAdd: (service: ServiceType) => void;
-  onSubmit: () => void;
+  onCloseModal: () => void;
 };

@@ -57,7 +57,7 @@ export const Services = () => {
           <AddServiceModal
             durationOptions={durationOptions}
             onAdd={addService}
-            onSubmit={() => setModal(false)}
+            onCloseModal={() => setModal(false)}
           />
         </Modal>
       )}
