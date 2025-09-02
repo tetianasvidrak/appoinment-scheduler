@@ -1,9 +1,19 @@
 import { useState } from "react";
+import { useForm, Controller, type SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, MenuItem, TextField } from "@mui/material";
 
 import { Modal } from "../Modal";
 
 import type { EditServiceModalProps } from "./index.model";
+import { editServiceSchema } from "../../validation/serviceSchemas";
+
+type FormValues = {
+  name: string;
+  price: number;
+  duration: number;
+  categoryId: string;
+};
 
 export const EditServiceModal = ({
   service,
@@ -13,144 +23,156 @@ export const EditServiceModal = ({
   onDelete,
 }: EditServiceModalProps) => {
   const [modalDelete, setModalDelete] = useState(false);
-  const [formData, setFormData] = useState(
-    service || {
-      name: "",
-      price: "",
-      duration: "",
-      categoryId: "",
-    }
-  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      name: service?.name ?? "",
+      price: service?.price ?? "",
+      duration: service?.duration ?? "",
+      categoryId: service?.categoryId ?? "",
+    },
+    resolver: yupResolver(editServiceSchema),
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+    onEdit(service.id, {
+      ...data,
+      duration: Number(data.duration),
     });
   };
+
   return (
     <>
-      <div className="w-96 flex flex-col gap-4 my-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-96 flex flex-col gap-4 my-4"
+      >
         <div className="flex items-center gap-2">
           <label className="block font-medium">Category:</label>
-          <TextField
-            select
-            size="small"
+          <Controller
             name="categoryId"
-            value={formData.categoryId}
-            onChange={handleChange}
-            sx={{
-              width: "70%",
-              marginLeft: "auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
-            slotProps={{
-              select: {
-                MenuProps: {
-                  disableScrollLock: true,
-                  PaperProps: {
-                    sx: {
-                      maxHeight: 200,
-                      overflowY: "auto",
+            control={control}
+            render={({ field }) => (
+              <TextField
+                select
+                size="small"
+                {...field}
+                error={!!errors.categoryId}
+                helperText={errors.categoryId?.message}
+                value={field.value || ""}
+                sx={{
+                  width: "70%",
+                  marginLeft: "auto",
+                  "& .MuiOutlinedInput-root": { borderRadius: "12px" },
+                }}
+                slotProps={{
+                  select: {
+                    MenuProps: {
+                      disableScrollLock: true,
+                      PaperProps: { sx: { maxHeight: 200, overflowY: "auto" } },
                     },
                   },
-                },
-              },
-            }}
-          >
-            {categories?.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
-                {option.name}
-              </MenuItem>
-            ))}
-          </TextField>
+                }}
+              >
+                {categories?.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
         </div>
 
         <div className="flex items-center gap-2">
           <label className="block font-medium">Service:</label>
-          <TextField
+          <Controller
             name="name"
-            size="small"
-            value={formData.name}
-            onChange={handleChange}
-            sx={{
-              width: "70%",
-              marginLeft: "auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                size="small"
+                {...field}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                sx={{
+                  width: "70%",
+                  marginLeft: "auto",
+                  "& .MuiOutlinedInput-root": { borderRadius: "12px" },
+                }}
+              />
+            )}
           />
         </div>
 
         <div className="flex items-center gap-2">
           <label className="block font-medium">Duration:</label>
-          <TextField
-            select
-            size="small"
+          <Controller
             name="duration"
-            value={formData.duration}
-            onChange={handleChange}
-            sx={{
-              width: "70%",
-              marginLeft: "auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
-            slotProps={{
-              select: {
-                MenuProps: {
-                  disableScrollLock: true,
-                },
-              },
-            }}
-          >
-            {durationOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+            control={control}
+            render={({ field }) => (
+              <TextField
+                select
+                size="small"
+                {...field}
+                error={!!errors.duration}
+                helperText={errors.duration?.message}
+                sx={{
+                  width: "70%",
+                  marginLeft: "auto",
+                  "& .MuiOutlinedInput-root": { borderRadius: "12px" },
+                }}
+                slotProps={{
+                  select: { MenuProps: { disableScrollLock: true } },
+                }}
+              >
+                {durationOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
         </div>
 
         <div className="flex items-center gap-2">
           <label className="block font-medium">Price (€):</label>
-          <TextField
+          <Controller
             name="price"
-            size="small"
-            value={formData.price}
-            onChange={handleChange}
-            type="text"
-            sx={{
-              width: "70%",
-              marginLeft: "auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                size="small"
+                type="text"
+                {...field}
+                error={!!errors.price}
+                helperText={errors.price?.message}
+                sx={{
+                  width: "70%",
+                  marginLeft: "auto",
+                  "& .MuiOutlinedInput-root": { borderRadius: "12px" },
+                }}
+              />
+            )}
           />
         </div>
-      </div>
-      <div className="flex justify-end gap-3">
-        <Button
-          variant="outlined"
-          onClick={() => {
-            setModalDelete(true);
-          }}
-        >
-          Delete
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => onEdit(service.id, formData)}
-        >
-          Save
-        </Button>
-      </div>
+
+        <div className="flex justify-end gap-3 mt-2">
+          <Button variant="outlined" onClick={() => setModalDelete(true)}>
+            Delete
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+        </div>
+      </form>
+
       {modalDelete && (
         <Modal handlerClick={() => setModalDelete(false)}>
           <div className="flex flex-col items-center gap-6 p-4">

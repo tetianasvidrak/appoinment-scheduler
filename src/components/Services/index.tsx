@@ -16,7 +16,7 @@ export const Services = () => {
       categoryId: "1",
       name: "semi-permanente",
       duration: 30,
-      price: "30",
+      price: 30,
     },
   ]);
 

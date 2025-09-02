@@ -15,7 +15,7 @@ export const AddServiceModal = ({
     categoryId: "",
     name: "",
     duration: 30,
-    price: "",
+    price: 0,
   });
   console.log(formData);
 
