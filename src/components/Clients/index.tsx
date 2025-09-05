@@ -71,8 +71,8 @@ export const Clients = () => {
           <AddClientModal
             onAdd={(client) => {
               addClient(client);
-              setModal(false);
             }}
+            onClose={() => setModal(false)}
           />
         </Modal>
       )}

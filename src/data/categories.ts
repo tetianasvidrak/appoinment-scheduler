@@ -1,7 +1,7 @@
 import type { CategoryType } from "../model/category.model";
 
 export const categories: CategoryType[] = [
-  { id: "1", name: "Manicure", displayColor: "FBE4FF" },
+  { id: "1", name: "Manicure", displayColor: "FFE6F6" },
   { id: "2", name: "Pedicure", displayColor: "DCD3FF" },
   { id: "3", name: "Treatment", displayColor: "E7FFAC" },
   { id: "4", name: "Podology", displayColor: "BFFCC6" },

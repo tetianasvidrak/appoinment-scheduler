@@ -49,9 +49,9 @@ export const EditServiceModal = ({
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-96 flex flex-col gap-4 my-4"
+        className="w-96 flex flex-col gap-1 my-4"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <label className="block font-medium">Category:</label>
           <Controller
             name="categoryId"
@@ -62,7 +62,7 @@ export const EditServiceModal = ({
                 size="small"
                 {...field}
                 error={!!errors.categoryId}
-                helperText={errors.categoryId?.message}
+                helperText={errors.categoryId?.message || " "}
                 value={field.value || ""}
                 sx={{
                   width: "70%",
@@ -76,6 +76,9 @@ export const EditServiceModal = ({
                       PaperProps: { sx: { maxHeight: 200, overflowY: "auto" } },
                     },
                   },
+                  formHelperText: {
+                    sx: { minHeight: "20px" },
+                  },
                 }}
               >
                 {categories?.map((option) => (
@@ -88,7 +91,7 @@ export const EditServiceModal = ({
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <label className="block font-medium">Service:</label>
           <Controller
             name="name"
@@ -98,18 +101,23 @@ export const EditServiceModal = ({
                 size="small"
                 {...field}
                 error={!!errors.name}
-                helperText={errors.name?.message}
+                helperText={errors.name?.message || " "}
                 sx={{
                   width: "70%",
                   marginLeft: "auto",
                   "& .MuiOutlinedInput-root": { borderRadius: "12px" },
+                }}
+                slotProps={{
+                  formHelperText: {
+                    sx: { minHeight: "20px" },
+                  },
                 }}
               />
             )}
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <label className="block font-medium">Duration:</label>
           <Controller
             name="duration"
@@ -120,7 +128,7 @@ export const EditServiceModal = ({
                 size="small"
                 {...field}
                 error={!!errors.duration}
-                helperText={errors.duration?.message}
+                helperText={errors.duration?.message || " "}
                 sx={{
                   width: "70%",
                   marginLeft: "auto",
@@ -128,6 +136,9 @@ export const EditServiceModal = ({
                 }}
                 slotProps={{
                   select: { MenuProps: { disableScrollLock: true } },
+                  formHelperText: {
+                    sx: { minHeight: "20px" },
+                  },
                 }}
               >
                 {durationOptions.map((option) => (
@@ -140,7 +151,7 @@ export const EditServiceModal = ({
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <label className="block font-medium">Price (€):</label>
           <Controller
             name="price"
@@ -151,11 +162,16 @@ export const EditServiceModal = ({
                 type="text"
                 {...field}
                 error={!!errors.price}
-                helperText={errors.price?.message}
+                helperText={errors.price?.message || " "}
                 sx={{
                   width: "70%",
                   marginLeft: "auto",
                   "& .MuiOutlinedInput-root": { borderRadius: "12px" },
+                }}
+                slotProps={{
+                  formHelperText: {
+                    sx: { minHeight: "20px" },
+                  },
                 }}
               />
             )}

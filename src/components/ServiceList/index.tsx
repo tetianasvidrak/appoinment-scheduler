@@ -19,10 +19,8 @@ export const ServiceList = ({
 
   return (
     <div className="w-full">
-      <Card
-        sx={{ bgcolor: "pink.100", mb: 2, maxHeight: 200, overflowY: "auto" }}
-      >
-        <CardContent>
+      <Card sx={{ bgcolor: "#fff" }}>
+        <CardContent sx={{ maxHeight: 200, overflowY: "auto", p: 1 }}>
           {categories.map((category) => {
             const categoryServices = services.filter(
               (service: ServiceType) => service.categoryId === category.id
