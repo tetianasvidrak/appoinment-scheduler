@@ -1,9 +1,17 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { Button, TextField } from "@mui/material";
 
 import { Modal } from "../Modal";
 
 import type { EditClientModalProps } from "./index.model";
+import { editClientSchema } from "../../validation/clientSchemas";
+
+type FormValues = {
+  name: string;
+  phone: string;
+};
 
 export const EditClientModel = ({
   client,
@@ -11,65 +19,96 @@ export const EditClientModel = ({
   onDelete,
 }: EditClientModalProps) => {
   const [modalDelete, setModalDelete] = useState(false);
-  const [formData, setFormData] = useState(
-    client || {
-      name: "",
-      phone: "",
-    }
-  );
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      name: client?.name ?? "",
+      phone: client?.phone ?? "",
+    },
+    resolver: yupResolver(editClientSchema),
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    onEdit(client.id, {
+      ...data,
+    });
   };
   return (
     <>
-      <div className="w-96 flex flex-col gap-4 my-4">
-        <div className="flex items-center gap-2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-96 flex flex-col gap-1 my-4"
+      >
+        <div className="flex gap-2">
           <label className="block font-medium">Full name:</label>
-          <TextField
-            size="small"
+          <Controller
             name="name"
-            value={formData.name}
-            onChange={handleChange}
-            sx={{
-              width: "70%",
-              marginLeft: "auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
-          ></TextField>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="block font-medium">Phone:</label>
-          <TextField
-            name="phone"
-            size="small"
-            value={formData.phone}
-            onChange={handleChange}
-            sx={{
-              width: "70%",
-              marginLeft: "auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
+            control={control}
+            render={({ field }) => (
+              <TextField
+                size="small"
+                {...field}
+                error={!!errors.name}
+                helperText={errors.name?.message || " "}
+                value={field.value || ""}
+                sx={{
+                  width: "70%",
+                  marginLeft: "auto",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                  },
+                }}
+                slotProps={{
+                  formHelperText: {
+                    sx: { minHeight: "20px" },
+                  },
+                }}
+              />
+            )}
           />
         </div>
-      </div>
-      <div className="flex justify-end gap-3">
-        <Button variant="outlined" onClick={() => setModalDelete(true)}>
-          Delete
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => onEdit(client.id, formData)}
-        >
-          Save
-        </Button>
-      </div>
+
+        <div className="flex gap-2">
+          <label className="block font-medium">Phone:</label>
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                size="small"
+                {...field}
+                error={!!errors.phone}
+                helperText={errors.phone?.message || " "}
+                value={field.value || ""}
+                sx={{
+                  width: "70%",
+                  marginLeft: "auto",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                  },
+                }}
+                slotProps={{
+                  formHelperText: {
+                    sx: { minHeight: "20px" },
+                  },
+                }}
+              />
+            )}
+          />
+        </div>
+        <div className="flex justify-end gap-3">
+          <Button variant="outlined" onClick={() => setModalDelete(true)}>
+            Delete
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            Save
+          </Button>
+        </div>
+      </form>
       {modalDelete && (
         <Modal handlerClick={() => setModalDelete(false)}>
           <div className="flex flex-col items-center gap-6 p-4">
