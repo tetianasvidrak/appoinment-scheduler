@@ -26,7 +26,14 @@ export const Calendar = ({ date, onChange }: CalendarProps) => {
               justifyContent: "space-around",
               px: 1,
             },
-
+            "& .MuiPickersCalendarHeader-root": {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+            "& .MuiPickersCalendarHeader-label": {
+              fontSize: "1.2rem",
+              fontWeight: 500,
+            },
             "& .MuiPickersArrowSwitcher-button": {
               color: "#3b82f6",
               "&:hover": {

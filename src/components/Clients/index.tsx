@@ -50,22 +50,42 @@ export const Clients = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-2">
-        <div>
-          <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-            Clients
-          </Typography>
-          <p>Total clients: {clients.length}</p>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <Typography variant="h6" gutterBottom>
+              Clients
+            </Typography>
+            <p>Total clients: {clients.length}</p>
+          </div>
+          <Button
+            variant="outlined"
+            sx={{
+              padding: "5px 12px",
+              color: "#949494",
+              lineHeight: 1.5,
+              borderColor: "#949494",
+              borderRadius: "20px",
+              textTransform: "none",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#949494",
+                color: "#fff",
+                borderColor: "#949494",
+              },
+            }}
+            onClick={() => setModal(true)}
+          >
+            ADD NEW
+          </Button>
         </div>
-        <Button
-          variant="outlined"
-          sx={{ padding: "3px 10px 3px 10px" }}
-          onClick={() => setModal(true)}
-        >
-          ADD NEW
-        </Button>
+        <SearchClientBar onSearch={(input: string) => searchClient(input)} />
+        <ClientList
+          clients={filteredClients}
+          onEdit={editClient}
+          onDelete={deleteClient}
+        />
       </div>
-      <SearchClientBar onSearch={(input: string) => searchClient(input)} />
       {modal && (
         <Modal handlerClick={() => setModal(false)}>
           <AddClientModal
@@ -76,11 +96,6 @@ export const Clients = () => {
           />
         </Modal>
       )}
-      <ClientList
-        clients={filteredClients}
-        onEdit={editClient}
-        onDelete={deleteClient}
-      />
     </>
   );
 };

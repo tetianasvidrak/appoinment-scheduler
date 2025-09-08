@@ -15,7 +15,7 @@ export const Dashboard = () => {
   return (
     <>
       <div className="flex gap-20 p-2">
-        <div>
+        <div className="h-screen flex flex-col gap-6">
           <Services />
           <Calendar date={currentDate} onChange={onChangeDateHandler} />
           <Clients />

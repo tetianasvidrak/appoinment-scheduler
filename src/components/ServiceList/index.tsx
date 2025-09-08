@@ -20,7 +20,7 @@ export const ServiceList = ({
   return (
     <div className="w-full">
       <Card sx={{ bgcolor: "#fff" }}>
-        <CardContent sx={{ maxHeight: 200, overflowY: "auto", p: 1 }}>
+        <CardContent>
           {categories.map((category) => {
             const categoryServices = services.filter(
               (service: ServiceType) => service.categoryId === category.id
@@ -29,10 +29,16 @@ export const ServiceList = ({
             return (
               <div
                 key={category.id}
-                style={{ backgroundColor: `#${category.displayColor}` }}
+                style={{
+                  backgroundColor: `#${category.displayColor}`,
+                }}
                 className="mb-1 p-2 rounded"
               >
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                <Typography
+                  variant="subtitle1"
+                  gutterBottom
+                  sx={{ fontWeight: 700, letterSpacing: "0.05em" }}
+                >
                   {category.name}
                 </Typography>
 

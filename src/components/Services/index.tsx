@@ -40,17 +40,38 @@ export const Services = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-2">
-        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Services
-        </Typography>
-        <Button
-          variant="outlined"
-          sx={{ padding: "3px 10px 3px 10px" }}
-          onClick={() => setModal(true)}
-        >
-          ADD NEW
-        </Button>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between ">
+          <Typography variant="h6" gutterBottom>
+            Services
+          </Typography>
+          <Button
+            variant="outlined"
+            sx={{
+              padding: "5px 12px",
+              color: "#949494",
+              lineHeight: 1.5,
+              borderColor: "#949494",
+              borderRadius: "20px",
+              textTransform: "none",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#949494",
+                color: "#fff",
+                borderColor: "#949494",
+              },
+            }}
+            onClick={() => setModal(true)}
+          >
+            ADD NEW
+          </Button>
+        </div>
+        <ServiceList
+          services={services}
+          durationOptions={durationOptions}
+          onEdit={editService}
+          onDelete={deleteService}
+        />
       </div>
       {modal && (
         <Modal handlerClick={() => setModal(false)}>
@@ -61,12 +82,6 @@ export const Services = () => {
           />
         </Modal>
       )}
-      <ServiceList
-        services={services}
-        durationOptions={durationOptions}
-        onEdit={editService}
-        onDelete={deleteService}
-      />
     </>
   );
 };

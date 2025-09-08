@@ -21,6 +21,7 @@ import type { EditVisitModalState } from "../EditVisitModal/index.model";
 import type { ModalState } from "../Modal/index.model";
 import type { VisitType } from "../../model/Visit.model";
 import type { ServiceType } from "../../model/service.model";
+import { Typography } from "@mui/material";
 
 const employees: EmployeeType[] = [
   { id: "emp-1", name: "Svitlana" },
@@ -43,14 +44,14 @@ export default function Scheduler() {
           id: "1",
           categoryId: "1",
           name: "Manicura SIN esmalte",
-          price: "13",
+          price: 13,
           duration: 60,
         },
         {
           id: "2",
           categoryId: "1",
           name: "Manicura con esmalte permanente",
-          price: "23",
+          price: 23,
           duration: 90,
         },
       ],
@@ -65,14 +66,14 @@ export default function Scheduler() {
           id: "1",
           categoryId: "1",
           name: "Manicura SIN esmalte",
-          price: "13",
+          price: 13,
           duration: 60,
         },
         {
           id: "2",
           categoryId: "1",
           name: "Manicura con esmalte permanente",
-          price: "23",
+          price: 23,
           duration: 90,
         },
       ],
@@ -150,9 +151,9 @@ export default function Scheduler() {
   return (
     <div className="w-full">
       <div className="grid grid-cols-4">
-        <h1 className="col-start-1 text-xl font-normal mb-4">
+        <Typography variant="h6" gutterBottom>
           {currentDate.format("dddd, DD")}
-        </h1>
+        </Typography>
       </div>
       <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin}>
         <div className="grid grid-cols-[auto_1fr_1fr_1fr]">
