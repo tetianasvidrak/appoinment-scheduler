@@ -1,6 +1,14 @@
 import React from "react";
-import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 import { EditClientModel } from "../EditClientModal";
 import { Modal } from "../Modal";
@@ -8,13 +16,23 @@ import { Modal } from "../Modal";
 import type { ClientType } from "../../model/client.model";
 import type { ClientListProps } from "./index.model";
 
+type ClientModalState = {
+  type: "edit" | "delete";
+  client: ClientType;
+} | null;
+
 export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
-  const [selectedClient, setSelectedClient] = React.useState<ClientType | null>(
-    null
-  );
+  const [modalState, setModalState] = React.useState<ClientModalState>(null);
   return (
     <>
-      <List>
+      <List
+        className="scroll-thin"
+        sx={{
+          maxHeight: 220,
+          overflowY: "auto",
+          pr: 1,
+        }}
+      >
         {clients.map((client: ClientType) => (
           <ListItem
             key={client.id}
@@ -29,7 +47,7 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
                 backgroundColor: "rgba(59,130,246,0.1)",
               },
             }}
-            onClick={() => setSelectedClient(client)}
+            onClick={() => setModalState({ type: "edit", client })}
           >
             <ListItemIcon sx={{ minWidth: 28 }}>
               <FiberManualRecordIcon sx={{ fontSize: 10, color: "#3b82f6" }} />
@@ -47,20 +65,59 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
                 },
               }}
             />
+
+            <IconButton
+              size="small"
+              edge="end"
+              aria-label="delete"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(239,68,68,0.1)",
+                  color: "#ef4444",
+                },
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalState({ type: "delete", client });
+              }}
+            >
+              <DeleteOutlinedIcon fontSize="small" />
+            </IconButton>
           </ListItem>
         ))}
       </List>
-      {selectedClient && (
-        <Modal handlerClick={() => setSelectedClient(null)}>
+      {modalState && modalState.type === "delete" && (
+        <Modal handlerClick={() => setModalState(null)}>
+          <div className="flex flex-col items-center gap-6 p-4">
+            <p>Are you sure you want to delete this client?</p>
+            <div className="flex gap-4">
+              <Button variant="outlined" onClick={() => setModalState(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  onDelete(modalState.client.id);
+                  setModalState(null);
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {modalState && modalState.type === "edit" && (
+        <Modal handlerClick={() => setModalState(null)}>
           <EditClientModel
-            client={selectedClient}
+            client={modalState.client}
             onEdit={(id: string, data: Partial<ClientType>) => {
               onEdit(id, data);
-              setSelectedClient(null);
+              setModalState(null);
             }}
             onDelete={(id: string) => {
               onDelete(id);
-              setSelectedClient(null);
+              setModalState(null);
             }}
           />
         </Modal>

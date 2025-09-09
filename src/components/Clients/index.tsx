@@ -56,7 +56,7 @@ export const Clients = () => {
             <Typography variant="h6" gutterBottom>
               Clients
             </Typography>
-            <p>Total clients: {clients.length}</p>
+            <p className="text-sm">Total clients: {clients.length}</p>
           </div>
           <Button
             variant="outlined"

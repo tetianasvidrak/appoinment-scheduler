@@ -3,10 +3,10 @@ import { Card, CardContent, Typography, List, ListItem } from "@mui/material";
 
 import { Modal } from "../Modal";
 import { EditServiceModal } from "../EditServiceModal";
-import { categories } from "../../data/categories";
 
 import type { ServiceType } from "../../model/service.model";
 import type { ServiceListProps } from "./index.model";
+import { categories } from "../../data/categories";
 
 export const ServiceList = ({
   durationOptions,
@@ -20,7 +20,10 @@ export const ServiceList = ({
   return (
     <div className="w-full">
       <Card sx={{ bgcolor: "#fff" }}>
-        <CardContent>
+        <CardContent
+          className="scroll-thin"
+          sx={{ maxHeight: 220, overflowY: "auto", pr: 1 }}
+        >
           {categories.map((category) => {
             const categoryServices = services.filter(
               (service: ServiceType) => service.categoryId === category.id
@@ -37,7 +40,7 @@ export const ServiceList = ({
                 <Typography
                   variant="subtitle1"
                   gutterBottom
-                  sx={{ fontWeight: 700, letterSpacing: "0.05em" }}
+                  sx={{ fontWeight: 600, letterSpacing: "0.05em" }}
                 >
                   {category.name}
                 </Typography>
@@ -61,8 +64,8 @@ export const ServiceList = ({
                       }}
                       onClick={() => setSelectedService(service)}
                     >
-                      <span>{service.name}</span>
-                      <span>
+                      <span className="text-sm">{service.name}</span>
+                      <span className="text-sm">
                         {
                           durationOptions.find(
                             (option) => option.value === service.duration
