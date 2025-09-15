@@ -22,7 +22,11 @@ export const ServiceList = ({
       <Card sx={{ bgcolor: "#fff" }}>
         <CardContent
           className="scroll-thin"
-          sx={{ maxHeight: 220, overflowY: "auto", pr: 1 }}
+          sx={{
+            maxHeight: 220,
+            overflowY: "auto",
+            pr: 1,
+          }}
         >
           {categories.map((category) => {
             const categoryServices = services.filter(
@@ -39,7 +43,6 @@ export const ServiceList = ({
               >
                 <Typography
                   variant="subtitle1"
-                  gutterBottom
                   sx={{ fontWeight: 600, letterSpacing: "0.05em" }}
                 >
                   {category.name}

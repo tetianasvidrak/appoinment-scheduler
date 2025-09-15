@@ -20,7 +20,7 @@ export const Dashboard = () => {
           <Calendar date={currentDate} onChange={onChangeDateHandler} />
           <Clients />
         </div>
-        <Scheduler />
+        <Scheduler date={currentDate} />
       </div>
     </>
   );

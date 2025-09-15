@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { DndContext, pointerWithin, type DragEndEvent } from "@dnd-kit/core";
 
 import {
@@ -22,6 +22,7 @@ import type { ModalState } from "../Modal/index.model";
 import type { VisitType } from "../../model/Visit.model";
 import type { ServiceType } from "../../model/service.model";
 import { Typography } from "@mui/material";
+import type { SchedulerProps } from "./index.model";
 
 const employees: EmployeeType[] = [
   { id: "emp-1", name: "Svitlana" },
@@ -29,10 +30,8 @@ const employees: EmployeeType[] = [
   { id: "emp-3", name: "Alina" },
 ];
 
-export default function Scheduler() {
-  const [currentDate] = useState(dayjs());
+export default function Scheduler({ date }: SchedulerProps) {
   const [modal, setModal] = useState<ModalState | null>(null);
-  // const [duration, setDuration] = useState<number>(15);
   const [visits, setVisits] = useState<VisitType[]>([
     {
       id: "v1",
@@ -152,7 +151,7 @@ export default function Scheduler() {
     <div className="w-full">
       <div className="grid grid-cols-4">
         <Typography variant="h6" gutterBottom>
-          {currentDate.format("dddd, DD")}
+          {date?.format("dddd, DD")}
         </Typography>
       </div>
       <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin}>

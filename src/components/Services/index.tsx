@@ -42,9 +42,7 @@ export const Services = () => {
     <>
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between ">
-          <Typography variant="h6" gutterBottom>
-            Services
-          </Typography>
+          <Typography variant="h6">Services</Typography>
           <Button
             variant="outlined"
             sx={{

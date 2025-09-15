@@ -53,9 +53,7 @@ export const Clients = () => {
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div>
-            <Typography variant="h6" gutterBottom>
-              Clients
-            </Typography>
+            <Typography variant="h6">Clients</Typography>
             <p className="text-sm">Total clients: {clients.length}</p>
           </div>
           <Button
