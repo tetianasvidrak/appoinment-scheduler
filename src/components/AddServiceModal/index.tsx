@@ -1,11 +1,12 @@
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { Button, MenuItem, TextField } from "@mui/material";
 
 import type { AddServiceModalProps } from "./index.model.ts";
-import { categories } from "../../data/categories.ts";
+// import { categories } from "../../data/categories.ts";
 import { addServiceSchema } from "../../validation/serviceSchemas.ts";
+import { useGetCategoriesQuery } from "../../services/apiSlice.ts";
 
 type FormValues = {
   name: string;
@@ -32,14 +33,14 @@ export const AddServiceModal = ({
     },
     resolver: yupResolver(addServiceSchema),
   });
+  const { data: categories, error, isLoading } = useGetCategoriesQuery();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    const newService = {
-      ...data,
-      id: uuidv4(),
-    };
-    onAdd(newService);
-    onCloseModal();
+    // const newService = {
+    //   ...data,
+    //   id: uuidv4(),
+    // };
+    onAdd(data);
   };
 
   return (
@@ -79,7 +80,7 @@ export const AddServiceModal = ({
                 }}
               >
                 {categories?.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
+                  <MenuItem key={option._id} value={option._id}>
                     {option.name}
                   </MenuItem>
                 ))}

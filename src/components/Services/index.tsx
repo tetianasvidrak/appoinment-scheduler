@@ -5,44 +5,60 @@ import { AddServiceModal } from "../AddServiceModal";
 import { Modal } from "../Modal";
 import { ServiceList } from "../ServiceList";
 
-import type { ServiceType } from "../../model/service.model";
+import type { ServicePayload } from "../../model/service.model";
 import { durationOptions } from "../../constants/durationOptions";
+import {
+  useAddServiceMutation,
+  useDeleteServiceMutation,
+  useGetServicesQuery,
+  useUpdateServiceMutation,
+} from "../../services/apiSlice";
+import { Loader } from "../Loader";
 
 export const Services = () => {
   const [modal, setModal] = React.useState(false);
-  const [services, setServices] = React.useState<ServiceType[]>([
-    {
-      id: "semi-permanente",
-      categoryId: "1",
-      name: "semi-permanente",
-      duration: 30,
-      price: 30,
-    },
-  ]);
+  const { data: services, error, isLoading } = useGetServicesQuery();
+  const [addService] = useAddServiceMutation();
+  const [updateService] = useUpdateServiceMutation();
+  const [deleteService] = useDeleteServiceMutation();
 
-  const addService = (service: ServiceType) => {
-    setServices([...services, service]);
+  const handleAddService = async (data: ServicePayload) => {
+    try {
+      await addService(data).unwrap();
+      console.log("Service added!");
+      setModal(false);
+    } catch (err) {
+      console.error("Failed to add service:", err);
+    }
   };
 
-  const editService = (id: string, data: Partial<ServiceType>) => {
-    setServices((prevServices) =>
-      prevServices.map((service) =>
-        service.id === id ? { ...service, ...data } : service
-      )
-    );
+  const handleEditService = async (id: string, data: ServicePayload) => {
+    try {
+      await updateService({
+        id,
+        data,
+      }).unwrap();
+      console.log("Service updated!");
+    } catch (err) {
+      console.error("Update failed", err);
+    }
   };
 
-  const deleteService = (id: string) => {
-    setServices((prevServices) =>
-      prevServices.filter((service) => service.id !== id)
-    );
+  const handleDeleteService = async (id: string) => {
+    try {
+      const deleted = await deleteService(id).unwrap();
+      console.log("Deleted service:", deleted);
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
   };
 
   return (
     <>
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between ">
+        <div className="flex items-center justify-between border-b border-[#949494] pb-3">
           <Typography variant="h6">Services</Typography>
+
           <Button
             variant="outlined"
             sx={{
@@ -61,21 +77,23 @@ export const Services = () => {
             }}
             onClick={() => setModal(true)}
           >
-            ADD NEW
+            Add new
           </Button>
         </div>
+        {error && <p>Error occured...</p>}
+        {isLoading && <Loader imageSrc="loading" />}
         <ServiceList
-          services={services}
+          services={services ?? []}
           durationOptions={durationOptions}
-          onEdit={editService}
-          onDelete={deleteService}
+          onEdit={handleEditService}
+          onDelete={handleDeleteService}
         />
       </div>
       {modal && (
         <Modal handlerClick={() => setModal(false)}>
           <AddServiceModal
             durationOptions={durationOptions}
-            onAdd={addService}
+            onAdd={handleAddService}
             onCloseModal={() => setModal(false)}
           />
         </Modal>

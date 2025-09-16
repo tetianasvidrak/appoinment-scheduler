@@ -7,6 +7,7 @@ import { Modal } from "../Modal";
 
 import type { EditServiceModalProps } from "./index.model";
 import { editServiceSchema } from "../../validation/serviceSchemas";
+import type { ServicePayload } from "../../model/service.model";
 
 type FormValues = {
   name: string;
@@ -33,13 +34,13 @@ export const EditServiceModal = ({
       name: service?.name ?? "",
       price: service?.price ?? "",
       duration: service?.duration ?? "",
-      categoryId: service?.categoryId ?? "",
+      categoryId: service?.categoryId._id ?? "",
     },
     resolver: yupResolver(editServiceSchema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    onEdit(service.id, {
+  const onSubmit: SubmitHandler<FormValues> = (data: ServicePayload) => {
+    onEdit(service._id, {
       ...data,
       duration: Number(data.duration),
     });
@@ -82,7 +83,7 @@ export const EditServiceModal = ({
                 }}
               >
                 {categories?.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
+                  <MenuItem key={option._id} value={option._id}>
                     {option.name}
                   </MenuItem>
                 ))}
@@ -204,7 +205,7 @@ export const EditServiceModal = ({
               <Button
                 variant="outlined"
                 onClick={() => {
-                  onDelete(service.id);
+                  onDelete(service._id);
                 }}
               >
                 Delete
