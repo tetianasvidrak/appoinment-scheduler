@@ -13,7 +13,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { EditClientModel } from "../EditClientModal";
 import { Modal } from "../Modal";
 
-import type { ClientType } from "../../model/client.model";
+import type { ClientPayload, ClientType } from "../../model/client.model";
 import type { ClientListProps } from "./index.model";
 
 type ClientModalState = {
@@ -35,7 +35,7 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
       >
         {clients.map((client: ClientType) => (
           <ListItem
-            key={client.id}
+            key={client._id}
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -97,7 +97,7 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
               <Button
                 variant="outlined"
                 onClick={() => {
-                  onDelete(modalState.client.id);
+                  onDelete(modalState.client._id);
                   setModalState(null);
                 }}
               >
@@ -111,7 +111,7 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
         <Modal handlerClick={() => setModalState(null)}>
           <EditClientModel
             client={modalState.client}
-            onEdit={(id: string, data: Partial<ClientType>) => {
+            onEdit={(id: string, data: ClientPayload) => {
               onEdit(id, data);
               setModalState(null);
             }}

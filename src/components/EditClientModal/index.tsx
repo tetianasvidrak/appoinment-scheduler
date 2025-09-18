@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
-import { Button, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
 import { Modal } from "../Modal";
+import { CustomButton } from "../CustomButton";
 
 import type { EditClientModalProps } from "./index.model";
 import { editClientSchema } from "../../validation/clientSchemas";
@@ -33,7 +34,7 @@ export const EditClientModel = ({
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    onEdit(client.id, {
+    onEdit(client._id, {
       ...data,
     });
   };
@@ -101,12 +102,16 @@ export const EditClientModel = ({
           />
         </div>
         <div className="flex justify-end gap-3">
-          <Button variant="outlined" onClick={() => setModalDelete(true)}>
+          <CustomButton
+            sx={{ fontSize: "16px" }}
+            onClick={() => setModalDelete(true)}
+          >
             Delete
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
+          </CustomButton>
+
+          <CustomButton type="submit" sx={{ fontSize: "16px" }}>
             Save
-          </Button>
+          </CustomButton>
         </div>
       </form>
       {modalDelete && (
@@ -114,22 +119,20 @@ export const EditClientModel = ({
           <div className="flex flex-col items-center gap-6 p-4">
             <p>Are you sure you want to delete this client?</p>
             <div className="flex gap-4">
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  setModalDelete(false);
-                }}
+              <CustomButton
+                sx={{ fontSize: "16px" }}
+                onClick={() => setModalDelete(false)}
               >
                 Cancel
-              </Button>
-              <Button
-                variant="outlined"
+              </CustomButton>
+              <CustomButton
+                sx={{ fontSize: "16px" }}
                 onClick={() => {
-                  onDelete(client.id);
+                  onDelete(client._id);
                 }}
               >
                 Delete
-              </Button>
+              </CustomButton>
             </div>
           </div>
         </Modal>

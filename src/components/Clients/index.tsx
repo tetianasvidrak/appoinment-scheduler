@@ -1,41 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import { ErrorOutline } from "@mui/icons-material";
 
 import { Modal } from "../Modal";
 import { AddClientModal } from "../AddClientModal";
 import { ClientList } from "../ClientList";
-
-import type { ClientType } from "../../model/client.model";
+import { ErrorMessage } from "../ErrorMessage";
+import { SkeletonList } from "../SkeletonList";
 import SearchClientBar from "../SearchClientBar";
+import { CustomButton } from "../CustomButton";
+
+import type { ClientPayload, ClientType } from "../../model/client.model";
+import {
+  useAddClientMutation,
+  useDeleteClientMutation,
+  useGetClientsQuery,
+  useUpdateClientMutation,
+} from "../../services/apiSlice";
 
 export const Clients = () => {
   const [modal, setModal] = React.useState(false);
-  const [clients, setClients] = useState<ClientType[]>([
-    {
-      id: "1",
-      name: "Tetiana",
-      phone: "1234567",
-    },
-    { id: "2", name: "NAtali", phone: "234" },
-  ]);
+
+  const { data: clients = [], error, isLoading } = useGetClientsQuery();
   const [filteredClients, setFilteredClients] = useState<ClientType[]>(clients);
+  const [addClient] = useAddClientMutation();
+  const [updateClient] = useUpdateClientMutation();
+  const [deleteClient] = useDeleteClientMutation();
 
   useEffect(() => {
     setFilteredClients(clients);
   }, [clients]);
 
-  const addClient = (client: ClientType) => {
-    setClients((prev) => [...prev, client]);
+  const handleAddClient = async (client: ClientPayload) => {
+    try {
+      await addClient(client).unwrap();
+    } catch (err) {
+      console.error("Failed to add client:", err);
+    }
   };
 
-  const editClient = (id: string, data: Partial<ClientType>) => {
-    setClients((prev) =>
-      prev.map((client) => (client.id === id ? { ...client, ...data } : client))
-    );
+  const handleUpdateClient = async (id: string, data: ClientPayload) => {
+    try {
+      await updateClient({
+        id,
+        data,
+      }).unwrap();
+    } catch (err) {
+      console.error("Update failed", err);
+    }
   };
 
-  const deleteClient = (id: string) => {
-    setClients((prev) => prev.filter((client) => client.id !== id));
+  const handleDeleteClient = async (id: string) => {
+    try {
+      const deleted = await deleteClient(id).unwrap();
+      console.log("Deleted client:", deleted);
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
   };
 
   const searchClient = (input: string) => {
@@ -54,41 +75,39 @@ export const Clients = () => {
         <div className="flex items-center justify-between">
           <div>
             <Typography variant="h6">Clients</Typography>
-            <p className="text-sm">Total clients: {clients.length}</p>
+            <p className="text-sm">Total clients: {clients?.length}</p>
           </div>
-          <Button
-            variant="outlined"
-            sx={{
-              padding: "5px 12px",
-              color: "#949494",
-              lineHeight: 1.5,
-              borderColor: "#949494",
-              borderRadius: "20px",
-              textTransform: "none",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: "#949494",
-                color: "#fff",
-                borderColor: "#949494",
-              },
-            }}
+          <CustomButton
+            disabled={!!error}
+            sx={{ fontSize: "16px" }}
             onClick={() => setModal(true)}
           >
-            ADD NEW
-          </Button>
+            Add new
+          </CustomButton>
         </div>
-        <SearchClientBar onSearch={(input: string) => searchClient(input)} />
-        <ClientList
-          clients={filteredClients}
-          onEdit={editClient}
-          onDelete={deleteClient}
+        <SearchClientBar
+          onSearch={(input: string) => searchClient(input)}
+          disabled={isLoading || !!error}
         />
+        {isLoading ? (
+          <SkeletonList />
+        ) : error ? (
+          <ErrorMessage message="Failed to load data...">
+            <ErrorOutline fontSize="large" />
+          </ErrorMessage>
+        ) : (
+          <ClientList
+            clients={filteredClients}
+            onEdit={handleUpdateClient}
+            onDelete={handleDeleteClient}
+          />
+        )}
       </div>
       {modal && (
         <Modal handlerClick={() => setModal(false)}>
           <AddClientModal
             onAdd={(client) => {
-              addClient(client);
+              handleAddClient(client);
             }}
             onClose={() => setModal(false)}
           />

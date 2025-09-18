@@ -4,7 +4,10 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import type { SearchClientBarProps } from "./index.model";
 
-export default function SearchClientBar({ onSearch }: SearchClientBarProps) {
+export default function SearchClientBar({
+  onSearch,
+  disabled,
+}: SearchClientBarProps) {
   const [, setQuery] = useState("");
   return (
     <TextField
@@ -47,6 +50,7 @@ export default function SearchClientBar({ onSearch }: SearchClientBarProps) {
           ),
         },
       }}
+      disabled={disabled}
     />
   );
 }

@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const baseUrl = import.meta.env.VITE_API_URL;
 import type { CategoryType } from "../model/category.model";
 import type { ServiceType } from "../model/service.model";
+import type { ClientPayload, ClientType } from "../model/client.model";
 
 export type ServicePayload = {
   categoryId: string;
@@ -13,7 +14,7 @@ export type ServicePayload = {
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({ baseUrl }),
-  tagTypes: ["Category", "Services"],
+  tagTypes: ["Category", "Services", "Clients"],
   endpoints: (builder) => ({
     getCategories: builder.query<CategoryType[], void>({
       query: () => `/categories`,
@@ -49,6 +50,36 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Services"],
     }),
+    getClients: builder.query<ClientType[], void>({
+      query: () => `/clients`,
+      providesTags: ["Clients"],
+    }),
+    addClient: builder.mutation<ClientType, ClientPayload>({
+      query: (data) => ({
+        url: `/clients`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Clients"],
+    }),
+    updateClient: builder.mutation<
+      ClientType,
+      { id: string; data: ClientPayload }
+    >({
+      query: ({ id, data }) => ({
+        url: `/clients/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Clients"],
+    }),
+    deleteClient: builder.mutation<ClientType, string>({
+      query: (id) => ({
+        url: `/clients/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Clients"],
+    }),
   }),
 });
 
@@ -58,4 +89,8 @@ export const {
   useAddServiceMutation,
   useUpdateServiceMutation,
   useDeleteServiceMutation,
+  useGetClientsQuery,
+  useAddClientMutation,
+  useUpdateClientMutation,
+  useDeleteClientMutation,
 } = apiSlice;
