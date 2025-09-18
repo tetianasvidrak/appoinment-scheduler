@@ -1,12 +1,11 @@
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-// import { v4 as uuidv4 } from "uuid";
-import { Button, MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
 
 import type { AddServiceModalProps } from "./index.model.ts";
-// import { categories } from "../../data/categories.ts";
 import { addServiceSchema } from "../../validation/serviceSchemas.ts";
 import { useGetCategoriesQuery } from "../../services/apiSlice.ts";
+import { CustomButton } from "../CustomButton/index.tsx";
 
 type FormValues = {
   name: string;
@@ -33,13 +32,9 @@ export const AddServiceModal = ({
     },
     resolver: yupResolver(addServiceSchema),
   });
-  const { data: categories, error, isLoading } = useGetCategoriesQuery();
+  const { data: categories } = useGetCategoriesQuery();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    // const newService = {
-    //   ...data,
-    //   id: uuidv4(),
-    // };
     onAdd(data);
   };
 
@@ -62,6 +57,7 @@ export const AddServiceModal = ({
                 error={!!errors.categoryId}
                 helperText={errors.categoryId?.message || " "}
                 value={field.value || ""}
+                className="self-center"
                 sx={{
                   width: "70%",
                   marginLeft: "auto",
@@ -177,12 +173,8 @@ export const AddServiceModal = ({
         </div>
 
         <div className="flex justify-end gap-3">
-          <Button variant="outlined" onClick={() => onCloseModal()}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            Save
-          </Button>
+          <CustomButton onClick={() => onCloseModal()}>Cancel</CustomButton>
+          <CustomButton type="submit">Save</CustomButton>
         </div>
       </form>
     </>

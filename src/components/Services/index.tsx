@@ -1,31 +1,46 @@
 import React from "react";
-import { Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
+import { ErrorOutline } from "@mui/icons-material";
 
 import { AddServiceModal } from "../AddServiceModal";
 import { Modal } from "../Modal";
 import { ServiceList } from "../ServiceList";
+import { CustomButton } from "../CustomButton";
+import { SkeletonList } from "../SkeletonList";
+import { ErrorMessage } from "../ErrorMessage";
 
 import type { ServicePayload } from "../../model/service.model";
 import { durationOptions } from "../../constants/durationOptions";
 import {
   useAddServiceMutation,
   useDeleteServiceMutation,
+  useGetCategoriesQuery,
   useGetServicesQuery,
   useUpdateServiceMutation,
 } from "../../services/apiSlice";
-import { Loader } from "../Loader";
 
 export const Services = () => {
   const [modal, setModal] = React.useState(false);
-  const { data: services, error, isLoading } = useGetServicesQuery();
+  const {
+    data: categories,
+    error: errorCategories,
+    isLoading: isLoadingCategories,
+  } = useGetCategoriesQuery();
+  const {
+    data: services,
+    error: errorServices,
+    isLoading: isLoadingServices,
+  } = useGetServicesQuery();
   const [addService] = useAddServiceMutation();
   const [updateService] = useUpdateServiceMutation();
   const [deleteService] = useDeleteServiceMutation();
 
+  const isLoading = isLoadingCategories || isLoadingServices;
+  const error = errorCategories || errorServices;
+
   const handleAddService = async (data: ServicePayload) => {
     try {
       await addService(data).unwrap();
-      console.log("Service added!");
       setModal(false);
     } catch (err) {
       console.error("Failed to add service:", err);
@@ -38,7 +53,6 @@ export const Services = () => {
         id,
         data,
       }).unwrap();
-      console.log("Service updated!");
     } catch (err) {
       console.error("Update failed", err);
     }
@@ -59,35 +73,29 @@ export const Services = () => {
         <div className="flex items-center justify-between border-b border-[#949494] pb-3">
           <Typography variant="h6">Services</Typography>
 
-          <Button
-            variant="outlined"
-            sx={{
-              padding: "5px 12px",
-              color: "#949494",
-              lineHeight: 1.5,
-              borderColor: "#949494",
-              borderRadius: "20px",
-              textTransform: "none",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: "#949494",
-                color: "#fff",
-                borderColor: "#949494",
-              },
-            }}
+          <CustomButton
+            disabled={!!errorCategories}
+            sx={{ fontSize: "16px" }}
             onClick={() => setModal(true)}
           >
             Add new
-          </Button>
+          </CustomButton>
         </div>
-        {error && <p>Error occured...</p>}
-        {isLoading && <Loader imageSrc="loading" />}
-        <ServiceList
-          services={services ?? []}
-          durationOptions={durationOptions}
-          onEdit={handleEditService}
-          onDelete={handleDeleteService}
-        />
+        {isLoading ? (
+          <SkeletonList />
+        ) : error ? (
+          <ErrorMessage message="Failed to load data...">
+            <ErrorOutline fontSize="large" />
+          </ErrorMessage>
+        ) : (
+          <ServiceList
+            categories={categories ?? []}
+            services={services ?? []}
+            durationOptions={durationOptions}
+            onEdit={handleEditService}
+            onDelete={handleDeleteService}
+          />
+        )}
       </div>
       {modal && (
         <Modal handlerClick={() => setModal(false)}>

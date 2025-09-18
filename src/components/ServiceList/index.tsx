@@ -1,22 +1,14 @@
 import React from "react";
-import {
-  CardContent,
-  Typography,
-  List,
-  ListItem,
-  CircularProgress,
-} from "@mui/material";
-import { ErrorOutline } from "@mui/icons-material";
+import { CardContent, Typography, List, ListItem, Box } from "@mui/material";
 
 import { Modal } from "../Modal";
 import { EditServiceModal } from "../EditServiceModal";
 
 import type { ServicePayload, ServiceType } from "../../model/service.model";
 import type { ServiceListProps } from "./index.model";
-import { useGetCategoriesQuery } from "../../services/apiSlice";
-// import { Loader } from "../Loader";
 
 export const ServiceList = ({
+  categories,
   durationOptions,
   services,
   onEdit,
@@ -24,7 +16,6 @@ export const ServiceList = ({
 }: ServiceListProps) => {
   const [selectedService, setSelectedService] =
     React.useState<ServiceType | null>(null);
-  const { data: categories, error, isLoading } = useGetCategoriesQuery();
 
   const categorizedServices = React.useMemo(() => {
     if (!categories) return [];
@@ -50,28 +41,8 @@ export const ServiceList = ({
           flexDirection: "column",
         }}
       >
-        {error && (
-          <div className="flex flex-col items-center justify-center flex-grow">
-            <ErrorOutline fontSize="large" />
-            <span className="ml-2 text-gray-500">
-              не вдалося завантажити...
-            </span>
-          </div>
-        )}
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center flex-grow">
-            <CircularProgress />
-            <span className="ml-2 text-gray-500">Loading...</span>
-          </div>
-        )}
         {categorizedServices.map((category) => (
-          <div
-            key={category._id}
-            // style={{
-            //   backgroundColor: `${category.displayColor}`,
-            // }}
-            className="mb-1 rounded"
-          >
+          <div key={category._id} className="mb-1 rounded">
             <Typography
               variant="subtitle1"
               sx={{
@@ -98,7 +69,6 @@ export const ServiceList = ({
                     transition:
                       "background-color 0.3s ease, box-shadow 0.3s ease",
                     "&:hover": {
-                      // backgroundColor: "rgba(255,255,255,0.15)",
                       backgroundColor: `${category.displayColor}`,
                       boxShadow: "0 6px 6px rgba(0,0,0,0.2)",
                     },
@@ -106,7 +76,18 @@ export const ServiceList = ({
                   className="rounded-2xl"
                   onClick={() => setSelectedService(service)}
                 >
-                  <span className="text-sm">{service.name}</span>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        backgroundColor: `${category.displayColor}`,
+                        mr: 1,
+                      }}
+                    />
+                    <span className="text-sm">{service.name}</span>
+                  </Box>
                   <span className="text-sm">
                     {
                       durationOptions.find(
