@@ -1,10 +1,12 @@
-import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
+
+import { CustomButton } from "../CustomButton";
 
 import { addClientSchema } from "../../validation/clientSchemas";
 import type { AddClientModelProps } from "./index.model";
+import type { ClientPayload } from "../../model/client.model";
 
 type FormValues = {
   name: string;
@@ -24,13 +26,8 @@ export const AddClientModal = ({ onAdd, onClose }: AddClientModelProps) => {
     resolver: yupResolver(addClientSchema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
-    const newClient = {
-      ...data,
-      id: uuidv4(),
-    };
-    onAdd(newClient);
+  const onSubmit: SubmitHandler<FormValues> = (data: ClientPayload) => {
+    onAdd(data);
     onClose();
   };
 
@@ -96,12 +93,12 @@ export const AddClientModal = ({ onAdd, onClose }: AddClientModelProps) => {
           />
         </div>
         <div className="flex justify-end gap-3">
-          <Button variant="outlined" onClick={() => onClose()}>
+          <CustomButton sx={{ fontSize: "16px" }} onClick={() => onClose()}>
             Cancel
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
+          </CustomButton>
+          <CustomButton type="submit" sx={{ fontSize: "16px" }}>
             Save
-          </Button>
+          </CustomButton>
         </div>
       </form>
     </>

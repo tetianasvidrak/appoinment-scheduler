@@ -15,69 +15,24 @@ import { Modal } from "../Modal";
 import { TimeSlot } from "../TimeSlot";
 import { Visit } from "../Visit";
 
-import type { EmployeeType } from "../../model/employee.model";
 import type { AddVisitModalState } from "../AddVisitModal/index.model";
 import type { EditVisitModalState } from "../EditVisitModal/index.model";
 import type { ModalState } from "../Modal/index.model";
-import type { VisitType } from "../../model/Visit.model";
 import type { ServiceType } from "../../model/service.model";
 import { Typography } from "@mui/material";
 import type { SchedulerProps } from "./index.model";
-
-const employees: EmployeeType[] = [
-  { id: "emp-1", name: "Svitlana" },
-  { id: "emp-2", name: "Oksana" },
-  { id: "emp-3", name: "Alina" },
-];
+import {
+  useGetEmployeesQuery,
+  useGetVisitsQuery,
+} from "../../services/apiSlice";
 
 export default function Scheduler({ date }: SchedulerProps) {
+  const formattedDate = date?.format("YYYY-MM-DD");
+
+  const { data: visits = [] } = useGetVisitsQuery({ date: formattedDate });
+  const { data: employees = [] } = useGetEmployeesQuery();
   const [modal, setModal] = useState<ModalState | null>(null);
-  const [visits, setVisits] = useState<VisitType[]>([
-    {
-      id: "v1",
-      employeeId: "emp-1",
-      time: "09:00",
-      duration: 150,
-      services: [
-        {
-          id: "1",
-          categoryId: "1",
-          name: "Manicura SIN esmalte",
-          price: 13,
-          duration: 60,
-        },
-        {
-          id: "2",
-          categoryId: "1",
-          name: "Manicura con esmalte permanente",
-          price: 23,
-          duration: 90,
-        },
-      ],
-    },
-    {
-      id: "v2",
-      employeeId: "emp-1",
-      time: "12:00",
-      duration: 150,
-      services: [
-        {
-          id: "1",
-          categoryId: "1",
-          name: "Manicura SIN esmalte",
-          price: 13,
-          duration: 60,
-        },
-        {
-          id: "2",
-          categoryId: "1",
-          name: "Manicura con esmalte permanente",
-          price: 23,
-          duration: 90,
-        },
-      ],
-    },
-  ]);
+
   const times = generate15MinTimeSlots();
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -89,7 +44,7 @@ export default function Scheduler({ date }: SchedulerProps) {
     if (!target) return;
 
     const { employeeId, time } = target;
-    const movedVisit = visits.find((v) => v.id === visitId);
+    const movedVisit = visits.find((v) => v._id === visitId);
     if (!movedVisit) return;
 
     const durationSlots = movedVisit.duration / 15;
@@ -99,7 +54,7 @@ export default function Scheduler({ date }: SchedulerProps) {
         const slotTime = minutesToTime(timeToMinutes(time) + i * 15);
         return visits.some(
           (v) =>
-            v.id !== movedVisit.id &&
+            v._id !== movedVisit._id &&
             v.employeeId === employeeId &&
             timeToMinutes(slotTime) >= timeToMinutes(v.time) &&
             timeToMinutes(slotTime) < timeToMinutes(v.time) + v.duration
@@ -108,9 +63,9 @@ export default function Scheduler({ date }: SchedulerProps) {
     )
       return;
 
-    setVisits((prev) =>
-      prev.map((v) => (v.id === visitId ? { ...v, employeeId, time } : v))
-    );
+    // setVisits((prev) =>
+    //   prev.map((v) => (v.id === visitId ? { ...v, employeeId, time } : v))
+    // );
   };
 
   const addVisit = (
@@ -136,14 +91,14 @@ export default function Scheduler({ date }: SchedulerProps) {
       alert("Слот зайнятий");
       return;
     }
-    const newVisit: VisitType = {
-      id: `v${Date.now()}`,
-      employeeId,
-      time,
-      duration,
-      services,
-    };
-    setVisits((prev) => [...prev, newVisit]);
+    // const newVisit: VisitType = {
+    //   _id: `v${Date.now()}`,
+    //   employeeId,
+    //   time,
+    //   duration,
+    //   services,
+    // };
+    // setVisits((prev) => [...prev, newVisit]);
     setModal(null);
   };
 
@@ -158,7 +113,7 @@ export default function Scheduler({ date }: SchedulerProps) {
         <div className="grid grid-cols-[auto_1fr_1fr_1fr]">
           <div></div>
           {employees.map((e) => (
-            <div key={e.id} className="text-center font-semibold text-lg">
+            <div key={e._id} className="text-center font-semibold text-lg">
               {e.name}
             </div>
           ))}
@@ -169,27 +124,27 @@ export default function Scheduler({ date }: SchedulerProps) {
               </div>
               {employees.map((e) => (
                 <TimeSlot
-                  key={e.id + time}
-                  employeeId={e.id}
+                  key={e._id}
+                  employeeId={e._id}
                   time={time}
-                  occupied={isSlotOccupied(visits, e.id, time)}
+                  occupied={isSlotOccupied(visits, e._id, time)}
                   onClick={() => {
-                    setModal({ type: "add", employeeId: e.id, time });
+                    setModal({ type: "add", employeeId: e._id, time });
                   }}
                 >
                   {visits
                     .filter((v) => {
-                      return v.employeeId === e.id && v.time === time;
+                      return v.employeeId._id === e._id && v.time === time;
                     })
                     .map((v) => (
                       <Visit
-                        key={v.id}
+                        key={v._id}
                         visit={v}
                         onClick={(e) => {
                           e.stopPropagation();
                           setModal({
                             type: "edit",
-                            employeeId: v.employeeId,
+                            employeeId: v.employeeId._id,
                             time: v.time,
                           });
                         }}

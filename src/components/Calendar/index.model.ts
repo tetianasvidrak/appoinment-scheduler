@@ -1,6 +1,6 @@
-import { Dayjs } from "dayjs";
+import type { PickerValidDate } from "@mui/x-date-pickers/models";
 
 export type CalendarProps = {
-  date?: Dayjs | null;
-  onChange: (newDate: Dayjs | null) => void;
+  date: PickerValidDate;
+  onChange: (newDate: PickerValidDate) => void;
 };

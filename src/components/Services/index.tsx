@@ -34,7 +34,6 @@ export const Services = () => {
   const [addService] = useAddServiceMutation();
   const [updateService] = useUpdateServiceMutation();
   const [deleteService] = useDeleteServiceMutation();
-
   const isLoading = isLoadingCategories || isLoadingServices;
   const error = errorCategories || errorServices;
 

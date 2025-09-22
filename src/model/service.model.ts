@@ -2,7 +2,7 @@ import type { CategoryType } from "./category.model";
 
 export type ServiceType = {
   _id: string;
-  categoryId: CategoryType;
+  category: CategoryType;
   name: string;
   price: number;
   duration: number;

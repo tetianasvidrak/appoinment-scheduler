@@ -3,6 +3,8 @@ const baseUrl = import.meta.env.VITE_API_URL;
 import type { CategoryType } from "../model/category.model";
 import type { ServiceType } from "../model/service.model";
 import type { ClientPayload, ClientType } from "../model/client.model";
+import type { VisitType } from "../model/visit.model";
+import type { EmployeeType } from "../model/employee.model";
 
 export type ServicePayload = {
   categoryId: string;
@@ -14,11 +16,11 @@ export type ServicePayload = {
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({ baseUrl }),
-  tagTypes: ["Category", "Services", "Clients"],
+  tagTypes: ["Categories", "Services", "Clients", "Visits", "Employees"],
   endpoints: (builder) => ({
     getCategories: builder.query<CategoryType[], void>({
       query: () => `/categories`,
-      providesTags: ["Category"],
+      providesTags: ["Categories"],
     }),
     getServices: builder.query<ServiceType[], void>({
       query: () => `/services`,
@@ -80,6 +82,24 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Clients"],
     }),
+    getVisits: builder.query<VisitType[], { date?: string }>({
+      query: ({ date }) => {
+        const params = new URLSearchParams();
+        if (date) {
+          params.append("date", date);
+        }
+
+        return {
+          url: `/visits?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Visits"],
+    }),
+    getEmployees: builder.query<EmployeeType[], void>({
+      query: () => `/employees`,
+      providesTags: ["Employees"],
+    }),
   }),
 });
 
@@ -93,4 +113,6 @@ export const {
   useAddClientMutation,
   useUpdateClientMutation,
   useDeleteClientMutation,
+  useGetVisitsQuery,
+  useGetEmployeesQuery,
 } = apiSlice;

@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -9,8 +8,12 @@ export const Calendar = ({ date, onChange }: CalendarProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
-        value={date || dayjs()}
-        onChange={(newValue) => onChange(newValue)}
+        value={date}
+        onChange={(newValue) => {
+          if (newValue) {
+            onChange(newValue);
+          }
+        }}
         sx={{
           "& .MuiDateCalendar-root": {
             display: "flex",

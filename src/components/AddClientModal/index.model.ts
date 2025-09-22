@@ -1,6 +1,6 @@
-import type { ClientType } from "../../model/client.model";
+import type { ClientPayload } from "../../model/client.model";
 
 export type AddClientModelProps = {
-  onAdd: (client: ClientType) => void;
+  onAdd: (client: ClientPayload) => void;
   onClose: () => void;
 };

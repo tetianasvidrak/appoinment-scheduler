@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   IconButton,
   List,
   ListItem,
@@ -12,6 +11,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 import { EditClientModel } from "../EditClientModal";
 import { Modal } from "../Modal";
+import { CustomButton } from "../CustomButton";
 
 import type { ClientPayload, ClientType } from "../../model/client.model";
 import type { ClientListProps } from "./index.model";
@@ -91,18 +91,21 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
           <div className="flex flex-col items-center gap-6 p-4">
             <p>Are you sure you want to delete this client?</p>
             <div className="flex gap-4">
-              <Button variant="outlined" onClick={() => setModalState(null)}>
+              <CustomButton
+                sx={{ fontSize: "16px" }}
+                onClick={() => setModalState(null)}
+              >
                 Cancel
-              </Button>
-              <Button
-                variant="outlined"
+              </CustomButton>
+              <CustomButton
+                sx={{ fontSize: "16px" }}
                 onClick={() => {
                   onDelete(modalState.client._id);
                   setModalState(null);
                 }}
               >
                 Delete
-              </Button>
+              </CustomButton>
             </div>
           </div>
         </Modal>

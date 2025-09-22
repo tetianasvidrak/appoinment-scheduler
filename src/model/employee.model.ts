@@ -1,1 +1,6 @@
-export type EmployeeType = { id: string; name: string };
+export type EmployeeType = {
+  _id: string;
+  name: string;
+  phone: string;
+  active?: boolean;
+};

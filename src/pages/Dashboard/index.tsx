@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { Calendar } from "../../components/Calendar";
+import dayjs from "dayjs";
+import type { PickerValue } from "@mui/x-date-pickers/internals";
+
 import Scheduler from "../../components/Scheduler";
 import { Services } from "../../components/Services";
-import dayjs, { Dayjs } from "dayjs";
+import { Calendar } from "../../components/Calendar";
 import { Clients } from "../../components/Clients";
 
 export const Dashboard = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
 
-  const onChangeDateHandler = (newDate: Dayjs | null) => {
-    setCurrentDate(newDate || dayjs());
+  const onChangeDateHandler = (newDate: PickerValue) => {
+    if (newDate && dayjs.isDayjs(newDate)) {
+      setCurrentDate(newDate);
+    }
   };
 
   return (

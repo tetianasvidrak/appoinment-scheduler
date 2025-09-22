@@ -23,7 +23,7 @@ export const ServiceList = ({
     return categories.map((category) => ({
       ...category,
       services: services.filter(
-        (service: ServiceType) => service.categoryId._id === category._id
+        (service: ServiceType) => service.category._id === category._id
       ),
     }));
   }, [categories, services]);

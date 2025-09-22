@@ -34,7 +34,7 @@ export const EditServiceModal = ({
       name: service?.name ?? "",
       price: service?.price ?? "",
       duration: service?.duration ?? "",
-      categoryId: service?.categoryId._id ?? "",
+      categoryId: service?.category._id ?? "",
     },
     resolver: yupResolver(editServiceSchema),
   });

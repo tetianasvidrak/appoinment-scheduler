@@ -1,5 +1,5 @@
 import { timeToMinutes } from "../../helpers/time";
-import type { VisitType } from "../../model/Visit.model";
+import type { VisitType } from "../../model/visit.model";
 
 export const isSlotOccupied = (
   visits: VisitType[],

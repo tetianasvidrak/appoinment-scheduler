@@ -24,7 +24,7 @@ export const AddVisitModal = ({
       <h2 className="text-xl font-semibold mb-2">New appointment</h2>
       <div className="mb-5 w-md flex flex-col items-start gap-3">
         <p>
-          Employee: {employees.find((e) => e.id === modal.employeeId)?.name}
+          Employee: {employees.find((e) => e._id === modal.employeeId)?.name}
         </p>
         <CheckboxServices selected={services} onChange={setServices} />
 
