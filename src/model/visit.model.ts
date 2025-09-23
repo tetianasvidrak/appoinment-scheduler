@@ -25,3 +25,13 @@ export type VisitType = {
   duration: number;
   notes?: string;
 };
+
+export type VisitPayload = {
+  employeeId: string;
+  time: string;
+  date: string;
+  duration: number;
+  services: { category: string; service: string }[];
+  client: string;
+  note?: string;
+};

@@ -1,6 +1,7 @@
-import type { ModalState } from "../Modal/index.model";
 import type { EmployeeType } from "../../model/employee.model";
 import type { ServiceType } from "../../model/service.model";
+import type { ClientType } from "../../model/client.model";
+import type { ModalState } from "../Modal/index.model";
 
 export interface AddVisitModalState extends ModalState {
   type: "add";
@@ -13,7 +14,10 @@ export type AddVisitModalProps = {
     employeeId: string,
     time: string,
     duration: number,
-    services: ServiceType[]
+    services: ServiceType[],
+    client: ClientType,
+    notes: string
   ) => void;
+  clients: ClientType[];
   onClose: () => void;
 };

@@ -1,10 +1,8 @@
+import Autocomplete from "@mui/material/Autocomplete";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-
-import { services } from "../../data/services";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
 import type { CheckboxServicesProps } from "./index.model";
 
@@ -12,6 +10,7 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export const CheckboxServices = ({
+  services,
   selected,
   onChange,
 }: CheckboxServicesProps) => {
@@ -23,7 +22,7 @@ export const CheckboxServices = ({
       disableCloseOnSelect
       getOptionLabel={(option) => option.name}
       value={selected}
-      onChange={(event, newValue) => {
+      onChange={(_, newValue) => {
         onChange(newValue);
       }}
       renderOption={(props, option, { selected }) => {
@@ -45,7 +44,7 @@ export const CheckboxServices = ({
         <TextField
           {...params}
           label="Services"
-          placeholder="Favorites"
+          placeholder="Add more"
           sx={{
             "& .MuiOutlinedInput-root": {
               "& fieldset": {

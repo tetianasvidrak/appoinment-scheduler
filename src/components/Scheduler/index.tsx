@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-// import dayjs from "dayjs";
+import { Typography } from "@mui/material";
 import { DndContext, pointerWithin, type DragEndEvent } from "@dnd-kit/core";
-
-import {
-  timeToMinutes,
-  minutesToTime,
-  generate15MinTimeSlots,
-} from "../../helpers/time";
-import { isSlotOccupied } from "./index.helper";
 
 import { AddVisitModal } from "../AddVisitModal";
 import { EditVisitModal } from "../EditVisitModal";
@@ -15,22 +8,35 @@ import { Modal } from "../Modal";
 import { TimeSlot } from "../TimeSlot";
 import { Visit } from "../Visit";
 
+import { isSlotOccupied } from "./index.helper";
+import {
+  timeToMinutes,
+  minutesToTime,
+  generate15MinTimeSlots,
+} from "../../helpers/time";
+
+import type { SchedulerProps } from "./index.model";
+import type { ModalState } from "../Modal/index.model";
 import type { AddVisitModalState } from "../AddVisitModal/index.model";
 import type { EditVisitModalState } from "../EditVisitModal/index.model";
-import type { ModalState } from "../Modal/index.model";
 import type { ServiceType } from "../../model/service.model";
-import { Typography } from "@mui/material";
-import type { SchedulerProps } from "./index.model";
+import type { ClientType } from "../../model/client.model";
+import type { VisitPayload } from "../../model/visit.model";
+
 import {
+  useAddVisitMutation,
+  useGetClientsQuery,
   useGetEmployeesQuery,
   useGetVisitsQuery,
 } from "../../services/apiSlice";
 
 export default function Scheduler({ date }: SchedulerProps) {
-  const formattedDate = date?.format("YYYY-MM-DD");
+  const formattedDate = date?.format("YYYY-MM-DD") ?? "";
 
   const { data: visits = [] } = useGetVisitsQuery({ date: formattedDate });
   const { data: employees = [] } = useGetEmployeesQuery();
+  const { data: clients = [], error, isLoading } = useGetClientsQuery();
+  const [addVisit] = useAddVisitMutation();
   const [modal, setModal] = useState<ModalState | null>(null);
 
   const times = generate15MinTimeSlots();
@@ -68,11 +74,13 @@ export default function Scheduler({ date }: SchedulerProps) {
     // );
   };
 
-  const addVisit = (
+  const createVisitPayload = (
     employeeId: string,
     time: string,
     duration: number,
-    services: ServiceType[]
+    services: ServiceType[],
+    client: ClientType,
+    note: string
   ) => {
     if (!duration || duration < 15 || duration % 15 !== 0) {
       alert("Тривалість має бути кратною 15 і не менше 15 хвилин");
@@ -91,14 +99,21 @@ export default function Scheduler({ date }: SchedulerProps) {
       alert("Слот зайнятий");
       return;
     }
-    // const newVisit: VisitType = {
-    //   _id: `v${Date.now()}`,
-    //   employeeId,
-    //   time,
-    //   duration,
-    //   services,
-    // };
-    // setVisits((prev) => [...prev, newVisit]);
+
+    const newVisit: VisitPayload = {
+      employeeId,
+      client: client._id,
+      services: services.map((service) => ({
+        category: service.category._id,
+        service: service._id,
+      })),
+      date: formattedDate,
+      time,
+      duration,
+      note,
+    };
+
+    addVisit(newVisit);
     setModal(null);
   };
 
@@ -168,8 +183,8 @@ export default function Scheduler({ date }: SchedulerProps) {
             <AddVisitModal
               employees={employees}
               modal={modal as AddVisitModalState}
-              addVisit={addVisit}
-              // duration={duration}
+              addVisit={createVisitPayload}
+              clients={clients}
               onClose={() => setModal(null)}
             />
           ) : null}

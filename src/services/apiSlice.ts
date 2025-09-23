@@ -3,7 +3,7 @@ const baseUrl = import.meta.env.VITE_API_URL;
 import type { CategoryType } from "../model/category.model";
 import type { ServiceType } from "../model/service.model";
 import type { ClientPayload, ClientType } from "../model/client.model";
-import type { VisitType } from "../model/visit.model";
+import type { VisitPayload, VisitType } from "../model/visit.model";
 import type { EmployeeType } from "../model/employee.model";
 
 export type ServicePayload = {
@@ -96,6 +96,14 @@ export const apiSlice = createApi({
       },
       providesTags: ["Visits"],
     }),
+    addVisit: builder.mutation<VisitType, VisitPayload>({
+      query: (data) => ({
+        url: `/visits`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Visits"],
+    }),
     getEmployees: builder.query<EmployeeType[], void>({
       query: () => `/employees`,
       providesTags: ["Employees"],
@@ -115,4 +123,5 @@ export const {
   useDeleteClientMutation,
   useGetVisitsQuery,
   useGetEmployeesQuery,
+  useAddVisitMutation,
 } = apiSlice;
