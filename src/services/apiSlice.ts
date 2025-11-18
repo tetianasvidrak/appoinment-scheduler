@@ -104,6 +104,17 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Visits"],
     }),
+    updateVisit: builder.mutation<
+      VisitType,
+      { id: string; data: VisitPayload }
+    >({
+      query: ({ id, data }) => ({
+        url: `/visits/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Visits"],
+    }),
     getEmployees: builder.query<EmployeeType[], void>({
       query: () => `/employees`,
       providesTags: ["Employees"],
@@ -122,6 +133,7 @@ export const {
   useUpdateClientMutation,
   useDeleteClientMutation,
   useGetVisitsQuery,
-  useGetEmployeesQuery,
   useAddVisitMutation,
+  useUpdateVisitMutation,
+  useGetEmployeesQuery,
 } = apiSlice;

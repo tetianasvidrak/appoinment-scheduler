@@ -1,17 +1,17 @@
 import { useDraggable } from "@dnd-kit/core";
 import type { VisitProps } from "./index.model";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 
 export const Visit = ({ visit, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: visit._id,
   });
 
-  console.log("VISIT", visit);
   const style = {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : undefined,
-    height: `calc(${(visit.duration / 15) * 3}rem - 20px)`,
+    height: `calc(${(visit.duration / 15) * 2.5}rem - 20px)`,
     marginTop: "10px",
     width: "95%",
     zIndex: 1,
@@ -30,33 +30,43 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="border border-[#cbd5e1] bg-[#E6F0FF] text-xs px-2 py-1 shadow rounded w-full relative"
+      className="flex flex-col gap-3 border-2 border-[#a6c4e8] bg-[#E6F0FF] text-xs shadow rounded w-full relative"
       onClick={onClick}
     >
-      <div className="text-sm font-semibold mb-2">
+      <div className="bg-[#a6c4e8] text-sm font-bold px-2 py-0.5">
         {visit.time}{" "}
         {hours < 1 ? `(${minutes} min)` : `(${hours} hour ${minutes} min)`}
       </div>
+      <div className="px-2">
+        <div>
+          {visit.services.map(({ service, category }) => {
+            // console.log("CATEGORIES", categories);
+            // const category = categories.find((c) => c._id === service.categoryId);
 
-      {visit.services.map(({ service, category }) => {
-        console.log("CATEGORY", category);
-        // console.log("CATEGORIES", categories);
-        // const category = categories.find((c) => c._id === service.categoryId);
-
-        return (
-          <p
-            key={service._id}
-            className="text-sm font-semibold px-2 py-2 rounded mb-1 shadow"
-            style={{
-              backgroundColor: `${category.displayColor}`,
-            }}
-          >
-            {service.name} ({service.duration} хв)
-          </p>
-        );
-      })}
-      <p>{visit.client.name}</p>
-      <p className="text-sm">Total: {totalPrice} &euro;</p>
+            return (
+              <p
+                key={service._id}
+                className="text-sm font-semibold px-2 py-1 rounded-2xl mb-2 shadow"
+                style={{
+                  backgroundColor: `${category.displayColor}`,
+                }}
+              >
+                {service.name} ({service.duration} хв)
+              </p>
+            );
+          })}
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-sm">{visit.client.name}</p>
+          <p className="text-base font-bold">Total: {totalPrice} &euro;</p>
+          {visit.note && (
+            <div className="flex items-center gap-1">
+              <EventNoteIcon fontSize="small" />
+              <p className="italic">{visit.note}</p>
+            </div>
+          )}
+        </div>
+      </div>
 
       <div
         {...attributes}

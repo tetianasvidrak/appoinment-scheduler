@@ -2,5 +2,6 @@ import type { ClientType } from "../../model/client.model";
 
 export type ClientSearchProps = {
   clients: ClientType[];
-  onChange: (client: ClientType) => void;
+  selected: string | null;
+  onChange: (client: string) => void;
 };

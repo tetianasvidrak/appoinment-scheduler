@@ -20,25 +20,38 @@ export const CheckboxServices = ({
       id="checkboxes-tags-demo"
       options={services}
       disableCloseOnSelect
+      disableClearable
+      isOptionEqualToValue={(option, value) => option._id === value._id}
       getOptionLabel={(option) => option.name}
       value={selected}
       onChange={(_, newValue) => {
         onChange(newValue);
       }}
-      renderOption={(props, option, { selected }) => {
-        const { key, ...optionProps } = props;
-        return (
-          <li key={key} {...optionProps}>
-            <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
-              checked={selected}
-            />
-            {option.name}
-          </li>
-        );
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: "#eaf6eb",
+            boxShadow: "0 4px 10px rgba(46, 108, 51, 0.5)",
+            borderRadius: "12px",
+          },
+        },
       }}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} key={option._id}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checkedIcon}
+            checked={selected}
+            sx={{
+              color: "#2e6c33",
+              "&.Mui-checked": {
+                color: "#2e6c33",
+              },
+            }}
+          />
+          {option.name}
+        </li>
+      )}
       style={{ width: "100%" }}
       renderInput={(params) => (
         <TextField
@@ -48,12 +61,25 @@ export const CheckboxServices = ({
           sx={{
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: "black",
+                borderRadius: "15px",
+                borderColor: "#2e6c33",
+                color: "#2e6c33",
               },
 
               "&.Mui-focused fieldset": {
-                borderColor: "green",
+                borderColor: "#2e6c33",
               },
+            },
+            "& .MuiInputLabel-root": {
+              color: "#2e6c33",
+              "&.Mui-focused": {
+                color: "#2e6c33",
+              },
+            },
+            "& .MuiButtonBase-root": {
+              color: "#2e6c33",
+              fontWeight: "700",
+              backgroundColor: "#c2e5c5",
             },
           }}
         />

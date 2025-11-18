@@ -3,8 +3,8 @@ import type { ModalProps } from "./index.model";
 
 export const Modal = ({ children, handlerClick }: ModalProps) => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-10">
-      <div className="relative bg-white p-4 rounded-lg shadow-md">
+    <div className="fixed top-0 left-0 w-full h-full bg-[#bfbfbf]/50 bg-opacity-50 flex items-center justify-center z-10">
+      <div className="relative bg-white p-4 rounded-lg shadow-[0_4px_10px_rgba(46,108,51,0.5)]">
         <img
           className="absolute right-3  w-6 h-6 cursor-pointer"
           src={CloseIcon}

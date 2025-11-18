@@ -23,7 +23,7 @@ export type VisitType = {
   date?: string;
   time: string;
   duration: number;
-  notes?: string;
+  note?: string;
 };
 
 export type VisitPayload = {

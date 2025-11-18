@@ -1,4 +1,4 @@
-import type { VisitType } from "../../model/Visit.model";
+import type { VisitType } from "../../model/visit.model";
 
 export type VisitProps = {
   visit: VisitType;
