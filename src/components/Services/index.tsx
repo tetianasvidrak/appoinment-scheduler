@@ -1,13 +1,13 @@
-import React from "react";
+import { useState } from "react";
 import { Typography } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
 
-import { AddServiceModal } from "../AddServiceModal";
-import { Modal } from "../Modal";
-import { ServiceList } from "../ServiceList";
 import { CustomButton } from "../CustomButton";
-import { SkeletonList } from "../SkeletonList";
 import { ErrorMessage } from "../ErrorMessage";
+import { Modal } from "../Modal";
+import { ServiceFormModal } from "../ServiceFormModal";
+import { ServiceList } from "../ServiceList";
+import { SkeletonList } from "../SkeletonList";
 
 import type { ServicePayload } from "../../model/service.model";
 import { durationOptions } from "../../constants/durationOptions";
@@ -18,9 +18,9 @@ import {
   useGetServicesQuery,
   useUpdateServiceMutation,
 } from "../../services/apiSlice";
+import type { ModalState, ServiceAction } from "./index.model";
 
 export const Services = () => {
-  const [modal, setModal] = React.useState(false);
   const {
     data: categories,
     error: errorCategories,
@@ -36,33 +36,32 @@ export const Services = () => {
   const [deleteService] = useDeleteServiceMutation();
   const isLoading = isLoadingCategories || isLoadingServices;
   const error = errorCategories || errorServices;
+  const [modal, setModal] = useState<ModalState | null>(null);
 
-  const handleAddService = async (data: ServicePayload) => {
+  const handleService = async (
+    action: ServiceAction,
+    payload?: ServicePayload,
+    id?: string
+  ) => {
     try {
-      await addService(data).unwrap();
-      setModal(false);
-    } catch (err) {
-      console.error("Failed to add service:", err);
-    }
-  };
+      if (action === "create" && payload) {
+        await addService(payload).unwrap();
+        console.log("Service added");
+        setModal(null);
+      }
 
-  const handleEditService = async (id: string, data: ServicePayload) => {
-    try {
-      await updateService({
-        id,
-        data,
-      }).unwrap();
-    } catch (err) {
-      console.error("Update failed", err);
-    }
-  };
+      if (action === "edit" && payload && id) {
+        await updateService({ id, data: payload }).unwrap();
+        console.log("Service updated");
+        setModal(null);
+      }
 
-  const handleDeleteService = async (id: string) => {
-    try {
-      const deleted = await deleteService(id).unwrap();
-      console.log("Deleted service:", deleted);
+      if (action === "delete" && id) {
+        const deleted = await deleteService(id).unwrap();
+        console.log("Deleted:", deleted);
+      }
     } catch (err) {
-      console.error("Delete failed", err);
+      console.error(`${action} failed:`, err);
     }
   };
 
@@ -75,7 +74,7 @@ export const Services = () => {
           <CustomButton
             disabled={!!errorCategories}
             sx={{ fontSize: "16px" }}
-            onClick={() => setModal(true)}
+            onClick={() => setModal({ type: "create" })}
           >
             Add new
           </CustomButton>
@@ -88,20 +87,23 @@ export const Services = () => {
           </ErrorMessage>
         ) : (
           <ServiceList
+            mode="edit"
             categories={categories ?? []}
             services={services ?? []}
             durationOptions={durationOptions}
-            onEdit={handleEditService}
-            onDelete={handleDeleteService}
+            onSubmit={(action, payload, id) =>
+              handleService(action, payload, id)
+            }
           />
         )}
       </div>
       {modal && (
-        <Modal handlerClick={() => setModal(false)}>
-          <AddServiceModal
+        <Modal handlerClick={() => setModal(null)}>
+          <ServiceFormModal
+            mode="create"
             durationOptions={durationOptions}
-            onAdd={handleAddService}
-            onCloseModal={() => setModal(false)}
+            onSubmit={(action, payload) => handleService(action, payload)}
+            onClose={() => setModal(null)}
           />
         </Modal>
       )}

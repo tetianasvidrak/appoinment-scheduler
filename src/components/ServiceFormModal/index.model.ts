@@ -1,12 +1,10 @@
 import type { ServiceType } from "../../model/service.model";
 import type { DurationOption } from "../../model/duration.model";
-import type { CategoryType } from "../../model/category.model";
 
-export type ServiceListProps = {
+export type ServiceFormModalProps = {
   mode: "create" | "edit";
-  categories: CategoryType[];
+  initialData?: ServiceType | null;
   durationOptions: DurationOption[];
-  services: ServiceType[];
   onSubmit: (
     action: "create" | "edit" | "delete",
     payload?: Omit<ServiceType, "_id" | "category"> & { categoryId: string },

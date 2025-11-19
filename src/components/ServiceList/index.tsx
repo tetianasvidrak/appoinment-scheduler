@@ -2,20 +2,21 @@ import React from "react";
 import { CardContent, Typography, List, ListItem, Box } from "@mui/material";
 
 import { Modal } from "../Modal";
-import { EditServiceModal } from "../EditServiceModal";
 
-import type { ServicePayload, ServiceType } from "../../model/service.model";
+import type { ServiceType } from "../../model/service.model";
 import type { ServiceListProps } from "./index.model";
+import { ServiceFormModal } from "../ServiceFormModal";
 
 export const ServiceList = ({
+  mode,
   categories,
   durationOptions,
   services,
-  onEdit,
-  onDelete,
+  onSubmit,
 }: ServiceListProps) => {
   const [selectedService, setSelectedService] =
     React.useState<ServiceType | null>(null);
+  console.log(selectedService);
 
   const categorizedServices = React.useMemo(() => {
     if (!categories) return [];
@@ -103,16 +104,12 @@ export const ServiceList = ({
       </CardContent>
       {selectedService && (
         <Modal handlerClick={() => setSelectedService(null)}>
-          <EditServiceModal
-            service={selectedService}
+          <ServiceFormModal
+            mode={mode}
+            initialData={selectedService}
             durationOptions={durationOptions}
-            categories={categories}
-            onEdit={(id: string, data: ServicePayload) => {
-              onEdit(id, data);
-              setSelectedService(null);
-            }}
-            onDelete={(id: string) => {
-              onDelete(id);
+            onSubmit={(action, payload, id) => {
+              onSubmit(action, payload, id);
               setSelectedService(null);
             }}
           />

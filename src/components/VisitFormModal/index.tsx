@@ -83,7 +83,6 @@ export const VisitFormModal = ({
       {" "}
       <h2 className="text-xl font-bold mb-2 text-center text-[#2e6c33]">
         {mode === "edit" ? "Edit appointment" : "New appointment"}
-        New appointment
       </h2>
       <form
         onSubmit={handleSubmit(submitHandler)}
