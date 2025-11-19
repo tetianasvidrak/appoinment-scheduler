@@ -98,7 +98,7 @@ export const Services = () => {
         )}
       </div>
       {modal && (
-        <Modal handlerClick={() => setModal(null)}>
+        <Modal onClose={() => setModal(null)}>
           <ServiceFormModal
             mode="create"
             durationOptions={durationOptions}

@@ -2,7 +2,7 @@ import type { VisitType } from "../../model/visit.model";
 
 export type ModalProps = {
   children: React.ReactNode;
-  handlerClick: () => void;
+  onClose: () => void;
   text?: string;
 };
 

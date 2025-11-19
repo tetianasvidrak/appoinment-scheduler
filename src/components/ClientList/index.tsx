@@ -9,20 +9,21 @@ import {
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-import { EditClientModel } from "../EditClientModal";
 import { Modal } from "../Modal";
 import { CustomButton } from "../CustomButton";
 
-import type { ClientPayload, ClientType } from "../../model/client.model";
+import type { ClientType } from "../../model/client.model";
 import type { ClientListProps } from "./index.model";
+import { ClientFormModal } from "../ClientFormModal";
 
 type ClientModalState = {
   type: "edit" | "delete";
   client: ClientType;
 } | null;
 
-export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
-  const [modalState, setModalState] = React.useState<ClientModalState>(null);
+export const ClientList = ({ mode, clients, onSubmit }: ClientListProps) => {
+  const [selectedClientModal, setSelectedClientModal] =
+    React.useState<ClientModalState>(null);
   return (
     <>
       <List
@@ -47,7 +48,7 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
                 backgroundColor: "rgba(59,130,246,0.1)",
               },
             }}
-            onClick={() => setModalState({ type: "edit", client })}
+            onClick={() => setSelectedClientModal({ type: "edit", client })}
           >
             <ListItemIcon sx={{ minWidth: 28 }}>
               <FiberManualRecordIcon sx={{ fontSize: 10, color: "#3b82f6" }} />
@@ -78,7 +79,7 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                setModalState({ type: "delete", client });
+                setSelectedClientModal({ type: "delete", client });
               }}
             >
               <DeleteOutlinedIcon fontSize="small" />
@@ -86,22 +87,22 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
           </ListItem>
         ))}
       </List>
-      {modalState && modalState.type === "delete" && (
-        <Modal handlerClick={() => setModalState(null)}>
+      {selectedClientModal && selectedClientModal.type === "delete" && (
+        <Modal onClose={() => setSelectedClientModal(null)}>
           <div className="flex flex-col items-center gap-6 p-4">
             <p>Are you sure you want to delete this client?</p>
             <div className="flex gap-4">
               <CustomButton
                 sx={{ fontSize: "16px" }}
-                onClick={() => setModalState(null)}
+                onClick={() => setSelectedClientModal(null)}
               >
                 Cancel
               </CustomButton>
               <CustomButton
                 sx={{ fontSize: "16px" }}
                 onClick={() => {
-                  onDelete(modalState.client._id);
-                  setModalState(null);
+                  onSubmit("delete", undefined, selectedClientModal.client._id);
+                  setSelectedClientModal(null);
                 }}
               >
                 Delete
@@ -110,18 +111,16 @@ export const ClientList = ({ clients, onEdit, onDelete }: ClientListProps) => {
           </div>
         </Modal>
       )}
-      {modalState && modalState.type === "edit" && (
-        <Modal handlerClick={() => setModalState(null)}>
-          <EditClientModel
-            client={modalState.client}
-            onEdit={(id: string, data: ClientPayload) => {
-              onEdit(id, data);
-              setModalState(null);
+      {selectedClientModal && selectedClientModal.type === "edit" && (
+        <Modal onClose={() => setSelectedClientModal(null)}>
+          <ClientFormModal
+            mode={mode}
+            initialData={selectedClientModal.client}
+            onSubmit={(action, payload, id) => {
+              onSubmit(action, payload, id);
+              setSelectedClientModal(null);
             }}
-            onDelete={(id: string) => {
-              onDelete(id);
-              setModalState(null);
-            }}
+            onClose={() => setSelectedClientModal(null)}
           />
         </Modal>
       )}

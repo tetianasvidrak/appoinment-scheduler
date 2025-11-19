@@ -1,11 +1,12 @@
 import type { ClientPayload, ClientType } from "../../model/client.model";
 
-export type ClientListProps = {
+export type ClientFormModalProps = {
   mode: "create" | "edit";
-  clients: ClientType[];
+  initialData?: ClientType;
   onSubmit: (
     action: "create" | "edit" | "delete",
     payload?: ClientPayload,
     id?: string
   ) => void;
+  onClose: () => void;
 };

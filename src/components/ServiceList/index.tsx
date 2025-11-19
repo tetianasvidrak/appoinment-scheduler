@@ -103,7 +103,7 @@ export const ServiceList = ({
         ))}
       </CardContent>
       {selectedService && (
-        <Modal handlerClick={() => setSelectedService(null)}>
+        <Modal onClose={() => setSelectedService(null)}>
           <ServiceFormModal
             mode={mode}
             initialData={selectedService}

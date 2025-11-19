@@ -198,7 +198,7 @@ export default function Scheduler({ date }: SchedulerProps) {
       </DndContext>
 
       {modal && (
-        <Modal handlerClick={() => setModal(null)}>
+        <Modal onClose={() => setModal(null)}>
           <VisitFormModal
             mode={modal.type === "edit" ? "edit" : "create"}
             employees={employees}

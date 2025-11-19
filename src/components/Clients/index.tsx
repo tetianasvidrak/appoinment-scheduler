@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
 
 import { Modal } from "../Modal";
-import { AddClientModal } from "../AddClientModal";
+import { ClientFormModal } from "../ClientFormModal";
 import { ClientList } from "../ClientList";
 import { ErrorMessage } from "../ErrorMessage";
 import { SkeletonList } from "../SkeletonList";
@@ -17,45 +17,44 @@ import {
   useGetClientsQuery,
   useUpdateClientMutation,
 } from "../../services/apiSlice";
+import type { ClientAction, ModalState } from "./index.model";
 
 export const Clients = () => {
-  const [modal, setModal] = React.useState(false);
-
   const { data: clients = [], error, isLoading } = useGetClientsQuery();
   const [filteredClients, setFilteredClients] = useState<ClientType[]>(clients);
   const [addClient] = useAddClientMutation();
   const [updateClient] = useUpdateClientMutation();
   const [deleteClient] = useDeleteClientMutation();
+  const [modal, setModal] = useState<ModalState | null>(null);
 
   useEffect(() => {
     setFilteredClients(clients);
   }, [clients]);
 
-  const handleAddClient = async (client: ClientPayload) => {
+  const handleClient = async (
+    action: ClientAction,
+    payload?: ClientPayload,
+    id?: string
+  ) => {
     try {
-      await addClient(client).unwrap();
-    } catch (err) {
-      console.error("Failed to add client:", err);
-    }
-  };
+      if (action === "create" && payload) {
+        await addClient(payload).unwrap();
+        console.log("Client added");
+        setModal(null);
+      }
 
-  const handleUpdateClient = async (id: string, data: ClientPayload) => {
-    try {
-      await updateClient({
-        id,
-        data,
-      }).unwrap();
-    } catch (err) {
-      console.error("Update failed", err);
-    }
-  };
+      if (action === "edit" && payload && id) {
+        await updateClient({ id, data: payload }).unwrap();
+        console.log("Client updated");
+        setModal(null);
+      }
 
-  const handleDeleteClient = async (id: string) => {
-    try {
-      const deleted = await deleteClient(id).unwrap();
-      console.log("Deleted client:", deleted);
+      if (action === "delete" && id) {
+        const deleted = await deleteClient(id).unwrap();
+        console.log("Client Deleted:", deleted);
+      }
     } catch (err) {
-      console.error("Delete failed", err);
+      console.error(`${action} failed:`, err);
     }
   };
 
@@ -80,7 +79,7 @@ export const Clients = () => {
           <CustomButton
             disabled={!!error}
             sx={{ fontSize: "16px" }}
-            onClick={() => setModal(true)}
+            onClick={() => setModal({ type: "create" })}
           >
             Add new
           </CustomButton>
@@ -97,19 +96,20 @@ export const Clients = () => {
           </ErrorMessage>
         ) : (
           <ClientList
+            mode="edit"
             clients={filteredClients}
-            onEdit={handleUpdateClient}
-            onDelete={handleDeleteClient}
+            onSubmit={(action, payload, id) =>
+              handleClient(action, payload, id)
+            }
           />
         )}
       </div>
       {modal && (
-        <Modal handlerClick={() => setModal(false)}>
-          <AddClientModal
-            onAdd={(client) => {
-              handleAddClient(client);
-            }}
-            onClose={() => setModal(false)}
+        <Modal onClose={() => setModal(null)}>
+          <ClientFormModal
+            mode="create"
+            onSubmit={(action, payload) => handleClient(action, payload)}
+            onClose={() => setModal(null)}
           />
         </Modal>
       )}
