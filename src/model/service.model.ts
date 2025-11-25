@@ -9,8 +9,8 @@ export type ServiceType = {
 };
 
 export type ServicePayload = {
-  categoryId: string;
   name: string;
+  category: string;
   price: number;
   duration: number;
 };

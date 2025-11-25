@@ -9,7 +9,7 @@ export type ServiceListProps = {
   services: ServiceType[];
   onSubmit: (
     action: "create" | "edit" | "delete",
-    payload?: Omit<ServiceType, "_id" | "category"> & { categoryId: string },
+    payload?: Omit<ServiceType, "_id" | "category"> & { category: string },
     id?: string
   ) => void;
   onClose?: () => void;

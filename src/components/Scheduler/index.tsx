@@ -25,6 +25,7 @@ import {
   useGetVisitsQuery,
   useUpdateVisitMutation,
 } from "../../services/apiSlice";
+import { countOverlappingVisits } from "../../helpers/overlappingVisits";
 
 export default function Scheduler({ date }: SchedulerProps) {
   const formattedDate = date?.format("YYYY-MM-DD") ?? "";
@@ -56,22 +57,22 @@ export default function Scheduler({ date }: SchedulerProps) {
 
     const conflict = [...Array(durationSlots).keys()].some((i) => {
       const slotTime = minutesToTime(timeToMinutes(time) + i * 15);
-      return visits.some(
-        (v) =>
-          v._id !== movedVisit._id &&
-          v.employeeId === employeeId &&
-          timeToMinutes(slotTime) >= timeToMinutes(v.time) &&
-          timeToMinutes(slotTime) < timeToMinutes(v.time) + v.duration
+
+      const overlapCount = countOverlappingVisits(
+        visits.filter((v) => v._id !== movedVisit._id),
+        employeeId,
+        slotTime
       );
+
+      return overlapCount >= 2;
     });
 
     if (conflict) return;
-    console.log("MOVED_VISIT", movedVisit);
 
     updateVisit({
       id: visitId,
       data: {
-        employeeId,
+        employee: employeeId,
         time,
         date: formattedDate,
         duration: movedVisit.duration,
@@ -108,7 +109,7 @@ export default function Scheduler({ date }: SchedulerProps) {
       updateVisit({
         id: data.id,
         data: {
-          employeeId: data.employeeId,
+          employee: data.employeeId,
           time: data.time,
           date: formattedDate,
           duration: data.duration,
@@ -125,7 +126,7 @@ export default function Scheduler({ date }: SchedulerProps) {
     }
 
     const newVisit: VisitPayload = {
-      employeeId: data.employeeId,
+      employee: data.employeeId,
       client: data.client,
       services: data.services.map((service) => ({
         category: service.category._id,
@@ -164,6 +165,7 @@ export default function Scheduler({ date }: SchedulerProps) {
               {employees.map((e) => (
                 <TimeSlot
                   key={e._id}
+                  visits={visits}
                   employeeId={e._id}
                   time={time}
                   occupied={isSlotOccupied(visits, e._id, time)}
@@ -173,7 +175,7 @@ export default function Scheduler({ date }: SchedulerProps) {
                 >
                   {visits
                     .filter((v) => {
-                      return v.employeeId._id === e._id && v.time === time;
+                      return v.employee._id === e._id && v.time === time;
                     })
                     .map((v) => (
                       <Visit
@@ -183,7 +185,7 @@ export default function Scheduler({ date }: SchedulerProps) {
                           e.stopPropagation();
                           setModal({
                             type: "edit",
-                            employeeId: v.employeeId._id,
+                            employeeId: v.employee._id,
                             time: v.time,
                             visit: v,
                           });

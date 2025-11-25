@@ -8,7 +8,7 @@ export const isSlotOccupied = (
 ) => {
   const slotMinutes = timeToMinutes(time);
   return visits.some((v) => {
-    if (v.employeeId !== employeeId) return false;
+    if (v.employee._id !== employeeId) return false;
     const visitStart = timeToMinutes(v.time);
     const visitEnd = visitStart + v.duration;
     return slotMinutes >= visitStart && slotMinutes < visitEnd;

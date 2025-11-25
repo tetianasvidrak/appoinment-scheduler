@@ -7,7 +7,7 @@ import type { VisitPayload, VisitType } from "../model/visit.model";
 import type { EmployeeType } from "../model/employee.model";
 
 export type ServicePayload = {
-  categoryId: string;
+  category: string;
   name: string;
   price: number;
   duration: number;

@@ -17,7 +17,9 @@ export type VisitService = {
 
 export type VisitType = {
   _id: string;
-  employeeId: EmployeeType;
+  employee: EmployeeType;
+  // employeeId: EmployeeType;
+  // employeeId: string;
   client: ClientType;
   services: VisitService[];
   date?: string;
@@ -27,7 +29,7 @@ export type VisitType = {
 };
 
 export type VisitPayload = {
-  employeeId: string;
+  employee: string;
   time: string;
   date: string;
   duration: number;

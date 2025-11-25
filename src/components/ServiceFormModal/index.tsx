@@ -40,7 +40,7 @@ export const ServiceFormModal = ({
   const submitHandler = (data: FormValues) => {
     const payload: ServicePayload = {
       name: data.name,
-      categoryId: data.categoryId,
+      category: data.categoryId,
       price: data.price,
       duration: data.duration,
     };
