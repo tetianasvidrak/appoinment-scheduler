@@ -39,19 +39,16 @@ export const Clients = () => {
     try {
       if (action === "create" && payload) {
         await addClient(payload).unwrap();
-        console.log("Client added");
         setModal(null);
       }
 
       if (action === "edit" && payload && id) {
         await updateClient({ id, data: payload }).unwrap();
-        console.log("Client updated");
         setModal(null);
       }
 
       if (action === "delete" && id) {
-        const deleted = await deleteClient(id).unwrap();
-        console.log("Client Deleted:", deleted);
+        await deleteClient(id).unwrap();
       }
     } catch (err) {
       console.error(`${action} failed:`, err);

@@ -60,13 +60,13 @@ export const TooltipVisit = ({
     >
       <div className="px-2">
         <div>
-          {visit.services.map(({ service, category }) => {
+          {visit.services.map(({ service }) => {
             return (
               <p
                 key={service._id}
                 className="inline-block text-sm font-semibold px-2 py-0.5 rounded-2xl mb-2 shadow"
                 style={{
-                  backgroundColor: `${category.displayColor}`,
+                  backgroundColor: `${service.category.displayColor}`,
                 }}
               >
                 {service.name} ({service.duration} хв)

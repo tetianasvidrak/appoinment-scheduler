@@ -20,9 +20,9 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : undefined,
-    height: `calc(${(visit.duration / 15) * 2.5}rem - 20px)`,
+    height: `calc(${(visit.duration / 15) * 2.5}rem - 10px)`,
     minHeight: "1.5rem",
-    marginTop: "10px",
+    marginTop: "5px",
     width: "95%",
     zIndex: 1,
     cursor: "pointer",
@@ -45,28 +45,24 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
         style={style}
         onMouseEnter={() => visit.duration < 60 && setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className={`flex flex-col gap-3 border-2 border-[#53b35b] bg-[#c2e5c5] text-xs shadow rounded w-full relative ${
+        className={`flex flex-col gap-3  bg-[#c2e5c5] text-xs shadow-xl rounded w-full relative ${
           visit.duration < 60 ? "truncate" : ""
         } `}
-        // className={`flex flex-col gap-3 border-2 border-[#a6c4e8] bg-[#E6F0FF] text-xs shadow rounded w-full relative ${
-        //   visit.duration < 60 ? "truncate" : ""
-        // } `}
         onClick={onClick}
       >
-        <div className="bg-[#53b35b] text-sm font-bold px-2 py-0.5">
-          {/* <div className="bg-[#a6c4e8] text-sm font-bold px-2 py-0.5"> */}
+        <div className="bg-[#2e6c33] text-sm text-white font-bold px-2 py-0.5 rounded-tl-sm">
           {visit.time}{" "}
           {hours < 1 ? `(${minutes} min)` : `(${hours} hour ${minutes} min)`}
         </div>
         <div className="px-2">
           <div>
-            {visit.services.map(({ service, category }) => {
+            {visit.services.map(({ service }) => {
               return (
                 <p
                   key={service._id}
                   className="inline-block text-sm font-semibold px-2 py-0.5 rounded-2xl mb-2 shadow"
                   style={{
-                    backgroundColor: `${category.displayColor}`,
+                    backgroundColor: `${service.category.displayColor}`,
                   }}
                 >
                   {service.name} ({service.duration} хв)

@@ -27,14 +27,8 @@ export const checkSlotOccupation = (
 
     const overlapCount = countOverlappingVisits(employeeVisits, slotTime);
 
-    console.log(`Checking slot ${slotTime}: overlap count = ${overlapCount}`);
-
     return overlapCount >= 2;
   });
-
-  console.log(
-    `Slot starting at ${time} for duration ${currentVisit.duration} is occupied: ${isSlotOccupied}`
-  );
 
   return isSlotOccupied;
 };

@@ -43,7 +43,7 @@ export const apiSlice = createApi({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Services"],
+      invalidatesTags: ["Services", "Visits"],
     }),
     deleteService: builder.mutation<ServiceType, string>({
       query: (id) => ({
@@ -73,7 +73,7 @@ export const apiSlice = createApi({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Clients"],
+      invalidatesTags: ["Clients", "Visits"],
     }),
     deleteClient: builder.mutation<ClientType, string>({
       query: (id) => ({

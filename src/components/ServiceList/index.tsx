@@ -16,7 +16,6 @@ export const ServiceList = ({
 }: ServiceListProps) => {
   const [selectedService, setSelectedService] =
     React.useState<ServiceType | null>(null);
-  console.log(selectedService);
 
   const categorizedServices = React.useMemo(() => {
     if (!categories) return [];

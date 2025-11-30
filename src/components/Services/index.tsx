@@ -46,19 +46,16 @@ export const Services = () => {
     try {
       if (action === "create" && payload) {
         await addService(payload).unwrap();
-        console.log("Service added");
         setModal(null);
       }
 
       if (action === "edit" && payload && id) {
         await updateService({ id, data: payload }).unwrap();
-        console.log("Service updated");
         setModal(null);
       }
 
       if (action === "delete" && id) {
-        const deleted = await deleteService(id).unwrap();
-        console.log("Deleted:", deleted);
+        await deleteService(id).unwrap();
       }
     } catch (err) {
       console.error(`${action} failed:`, err);

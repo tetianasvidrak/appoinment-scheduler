@@ -3,15 +3,15 @@ import type { ClientType } from "./client.model";
 
 export type VisitService = {
   _id: string;
-  category: {
-    _id: string;
-    displayColor: string;
-  };
   service: {
     _id: string;
     name: string;
     price: number;
     duration: number;
+    category: {
+      _id: string;
+      displayColor: string;
+    };
   };
 };
 
@@ -33,7 +33,7 @@ export type VisitPayload = {
   time: string;
   date: string;
   duration: number;
-  services: { category: string; service: string }[];
+  services: { service: string }[];
   client: string;
   note?: string;
 };

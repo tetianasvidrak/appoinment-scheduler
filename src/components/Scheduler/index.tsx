@@ -21,7 +21,6 @@ import {
   useGetVisitsQuery,
   useUpdateVisitMutation,
 } from "../../services/apiSlice";
-// import { countOverlappingVisits } from "../../helpers/overlappingVisits";
 import { checkSlotOccupation } from "./index.helper";
 
 export default function Scheduler({ date }: SchedulerProps) {
@@ -68,7 +67,6 @@ export default function Scheduler({ date }: SchedulerProps) {
         date: formattedDate,
         duration: movedVisit.duration,
         services: movedVisit.services.map((s) => ({
-          category: s.category._id!,
           service: s.service._id!,
         })),
         client: movedVisit.client._id,
@@ -150,7 +148,7 @@ export default function Scheduler({ date }: SchedulerProps) {
           ))}
           {times.map((time) => (
             <React.Fragment key={time}>
-              <div className="text-right pr-2 text-sm text-gray-500">
+              <div className="text-right pr-2 mt-[-25%] text-sm text-gray-500">
                 {time}
               </div>
               {employees.map((e) => (
