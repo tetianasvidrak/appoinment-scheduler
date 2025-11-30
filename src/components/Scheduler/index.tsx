@@ -7,12 +7,8 @@ import { Modal } from "../Modal";
 import { TimeSlot } from "../TimeSlot";
 import { Visit } from "../Visit";
 
-import { isSlotOccupied } from "./index.helper";
-import {
-  timeToMinutes,
-  minutesToTime,
-  generate15MinTimeSlots,
-} from "../../helpers/time";
+// import { checkSlotOccupation } from "./index.helper";
+import { generate15MinTimeSlots } from "../../helpers/time";
 
 import type { SchedulerProps, VisitFormType } from "./index.model";
 import type { ModalState } from "../Modal/index.model";
@@ -25,7 +21,8 @@ import {
   useGetVisitsQuery,
   useUpdateVisitMutation,
 } from "../../services/apiSlice";
-import { countOverlappingVisits } from "../../helpers/overlappingVisits";
+// import { countOverlappingVisits } from "../../helpers/overlappingVisits";
+import { checkSlotOccupation } from "./index.helper";
 
 export default function Scheduler({ date }: SchedulerProps) {
   const formattedDate = date?.format("YYYY-MM-DD") ?? "";
@@ -41,33 +38,27 @@ export default function Scheduler({ date }: SchedulerProps) {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    console.log("DRAG", active.id);
     if (!over) return;
 
     const visitId = active.id as string;
     const target = over.data.current;
-    console.log("VISIT_ID", visitId);
     if (!target) return;
 
     const { employeeId, time } = target;
+
     const movedVisit = visits.find((v) => v._id === visitId);
+    const employeeVisits = visits.filter(
+      (v) => v.employee._id === employeeId && v._id !== visitId
+    );
     if (!movedVisit) return;
 
-    const durationSlots = movedVisit.duration / 15;
+    const isSlotOccupied = checkSlotOccupation(
+      movedVisit,
+      employeeVisits,
+      time
+    );
 
-    const conflict = [...Array(durationSlots).keys()].some((i) => {
-      const slotTime = minutesToTime(timeToMinutes(time) + i * 15);
-
-      const overlapCount = countOverlappingVisits(
-        visits.filter((v) => v._id !== movedVisit._id),
-        employeeId,
-        slotTime
-      );
-
-      return overlapCount >= 2;
-    });
-
-    if (conflict) return;
+    if (isSlotOccupied) return;
 
     updateVisit({
       id: visitId,
@@ -91,19 +82,19 @@ export default function Scheduler({ date }: SchedulerProps) {
       alert("Тривалість має бути кратною 15 і не менше 15 хвилин");
       return;
     }
-    const visitSlots = data.duration / 15;
-    if (
-      [...Array(visitSlots).keys()].some((i) =>
-        isSlotOccupied(
-          visits,
-          data.employeeId,
-          minutesToTime(timeToMinutes(data.time) + i * 15)
-        )
-      )
-    ) {
-      alert("Слот зайнятий");
-      return;
-    }
+    // const visitSlots = data.duration / 15;
+    // if (
+    //   [...Array(visitSlots).keys()].some((i) =>
+    //     checkSlotOccupation(
+    //       visits,
+    //       data.employeeId,
+    //       minutesToTime(timeToMinutes(data.time) + i * 15)
+    //     )
+    //   )
+    // ) {
+    //   alert("Слот зайнятий");
+    //   return;
+    // }
 
     if (data.mode === "edit") {
       updateVisit({
@@ -168,7 +159,7 @@ export default function Scheduler({ date }: SchedulerProps) {
                   visits={visits}
                   employeeId={e._id}
                   time={time}
-                  occupied={isSlotOccupied(visits, e._id, time)}
+                  // occupied={checkSlotOccupation(visits, e._id, time)}
                   onClick={() => {
                     setModal({ type: "create", employeeId: e._id, time });
                   }}

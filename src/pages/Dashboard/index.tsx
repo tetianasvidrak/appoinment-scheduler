@@ -19,10 +19,12 @@ export const Dashboard = () => {
   return (
     <>
       <div className="flex gap-20 p-2">
-        <div className="h-screen flex flex-col gap-6">
+        <div className="h-screen grid grid-rows-[auto_350px_1fr] gap-6">
           <Services />
           <Calendar date={currentDate} onChange={onChangeDateHandler} />
-          <Clients />
+          <div className="overflow-auto">
+            <Clients />
+          </div>
         </div>
         <Scheduler date={currentDate} />
       </div>

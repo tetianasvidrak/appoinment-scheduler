@@ -44,7 +44,7 @@ export const ClientFormModal = ({
   return (
     <>
       <h2 className="text-xl font-bold mb-2 text-center text-[#2e6c33]">
-        New Client
+        {mode === "create" ? "New Client" : "Edit Client"}
       </h2>
       <form
         onSubmit={handleSubmit(submitHandler)}

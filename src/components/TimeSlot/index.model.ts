@@ -4,7 +4,7 @@ export type TimeSlotProps = {
   visits: VisitType[];
   employeeId: string;
   time: string;
-  occupied: boolean;
+  occupied?: boolean;
   onClick: () => void;
   children: React.ReactNode;
 };
