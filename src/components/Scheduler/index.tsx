@@ -134,7 +134,11 @@ export default function Scheduler({ date }: SchedulerProps) {
   return (
     <div className="w-full">
       <div className="grid grid-cols-4">
-        <Typography variant="h6" gutterBottom>
+        <Typography
+          variant="h6"
+          sx={{ color: "#2e6c33", fontWeight: "bold" }}
+          gutterBottom
+        >
           {date?.format("dddd, DD")}
         </Typography>
       </div>
@@ -170,6 +174,7 @@ export default function Scheduler({ date }: SchedulerProps) {
                       <Visit
                         key={v._id}
                         visit={v}
+                        visits={visits}
                         onClick={(e) => {
                           e.stopPropagation();
                           setModal({

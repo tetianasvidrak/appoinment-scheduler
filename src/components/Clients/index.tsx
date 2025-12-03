@@ -18,6 +18,7 @@ import {
   useUpdateClientMutation,
 } from "../../services/apiSlice";
 import type { ClientAction, ModalState } from "./index.model";
+import AddIcon from "@mui/icons-material/Add";
 
 export const Clients = () => {
   const { data: clients = [], error, isLoading } = useGetClientsQuery();
@@ -70,15 +71,21 @@ export const Clients = () => {
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div>
-            <Typography variant="h6">Clients</Typography>
+            <Typography
+              variant="h6"
+              sx={{ color: "#2e6c33", fontWeight: "bold" }}
+            >
+              Clients
+            </Typography>
             <p className="text-sm">Total clients: {clients?.length}</p>
           </div>
           <CustomButton
             disabled={!!error}
-            sx={{ fontSize: "16px" }}
+            round
+            sx={{ height: 42, width: 42 }}
             onClick={() => setModal({ type: "create" })}
           >
-            Add new
+            <AddIcon fontSize="medium" />
           </CustomButton>
         </div>
         <SearchClientBar

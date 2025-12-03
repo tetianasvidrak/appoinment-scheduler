@@ -19,6 +19,7 @@ import {
   useUpdateServiceMutation,
 } from "../../services/apiSlice";
 import type { ModalState, ServiceAction } from "./index.model";
+import AddIcon from "@mui/icons-material/Add";
 
 export const Services = () => {
   const {
@@ -66,14 +67,20 @@ export const Services = () => {
     <>
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between border-b border-[#949494] pb-3">
-          <Typography variant="h6">Services</Typography>
+          <Typography
+            variant="h6"
+            sx={{ color: "#2e6c33", fontWeight: "bold" }}
+          >
+            Services
+          </Typography>
 
           <CustomButton
             disabled={!!errorCategories}
-            sx={{ fontSize: "16px" }}
+            round
+            sx={{ height: 42, width: 42 }}
             onClick={() => setModal({ type: "create" })}
           >
-            Add new
+            <AddIcon fontSize="medium" />
           </CustomButton>
         </div>
         {isLoading ? (

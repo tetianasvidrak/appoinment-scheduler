@@ -3,8 +3,9 @@ import type { VisitProps } from "./index.model";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { TooltipVisit } from "../TooltipVisit";
 import { useRef, useState } from "react";
+import { timeToMinutes } from "../../helpers/time";
 
-export const Visit = ({ visit, onClick }: VisitProps) => {
+export const Visit = ({ visit, visits, onClick }: VisitProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: visit._id,
   });
@@ -16,6 +17,28 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
     ref.current = node; // реф для tooltip
   };
 
+  const employeeVisits = visits.filter(
+    (v) => v.employee._id === visit.employee._id
+  );
+
+  const sortedVisits = employeeVisits.sort((a, b) => {
+    return timeToMinutes(a.time) - timeToMinutes(b.time);
+  });
+
+  const visitPosition =
+    sortedVisits.findIndex((v) => v._id === visit._id) % 2 === 0
+      ? "left"
+      : "right";
+
+  const isVisitOverlapping = sortedVisits.some((v) => {
+    if (v._id === visit._id) return false;
+    const visitStart = timeToMinutes(visit.time);
+    const visitEnd = visitStart + visit.duration;
+    const otherVisitStart = timeToMinutes(v.time);
+    const otherVisitEnd = otherVisitStart + v.duration;
+    return visitStart < otherVisitEnd && visitEnd > otherVisitStart;
+  });
+
   const style = {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
@@ -23,7 +46,7 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
     height: `calc(${(visit.duration / 15) * 2.5}rem - 10px)`,
     minHeight: "1.5rem",
     marginTop: "5px",
-    width: "95%",
+    width: isVisitOverlapping ? "49%" : "100%",
     zIndex: 1,
     cursor: "pointer",
   };
@@ -47,8 +70,15 @@ export const Visit = ({ visit, onClick }: VisitProps) => {
         onMouseLeave={() => setShowTooltip(false)}
         className={`flex flex-col gap-3  bg-[#c2e5c5] text-xs shadow-xl rounded w-full relative ${
           visit.duration < 60 ? "truncate" : ""
-        } `}
+        } ${
+          isVisitOverlapping && visitPosition === "right"
+            ? "ml-auto"
+            : isVisitOverlapping && visitPosition === "left"
+            ? "mr-auto"
+            : "m-auto"
+        }`}
         onClick={onClick}
+        data-visit={visit.employee._id}
       >
         <div className="bg-[#2e6c33] text-sm text-white font-bold px-2 py-0.5 rounded-tl-sm">
           {visit.time}{" "}

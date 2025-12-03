@@ -5,9 +5,11 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
 import type { CalendarProps } from "./index.model";
 
+import "dayjs/locale/en-gb";
+
 export const Calendar = ({ date, onChange }: CalendarProps) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <DateCalendar
         value={date}
         onChange={(newValue) => {
@@ -16,20 +18,19 @@ export const Calendar = ({ date, onChange }: CalendarProps) => {
           }
         }}
         sx={{
-          "& .MuiDateCalendar-root": {
-            display: "flex",
-            flexShrink: 0,
-            width: "100%",
-            justifyContent: "space-around",
-            px: 1,
+          "& .MuiDayCalendar-header": {
+            justifyContent: "space-between",
+          },
+          "& .MuiDayCalendar-weekContainer": {
+            justifyContent: "space-between",
           },
           "& .MuiPickersCalendarHeader-root": {
-            paddingLeft: 0,
-            paddingRight: 0,
+            padding: 0,
           },
           "& .MuiPickersCalendarHeader-label": {
             fontSize: "1.2rem",
-            fontWeight: 500,
+            fontWeight: "bold",
+            color: "#2e6c33",
           },
           "& .MuiPickersArrowSwitcher-button": {
             color: "#2e6c33",
@@ -38,38 +39,25 @@ export const Calendar = ({ date, onChange }: CalendarProps) => {
             },
           },
           "& .MuiPickersDay-root": {
-            border: "none",
+            border: "1px solid transparent",
             transition: "0.2s",
             "&:hover": {
               backgroundColor: "rgba(34,197,94,0.15)",
             },
-            "&.Mui-focusVisible": {
-              backgroundColor: "rgba(34,197,94,0.15) !important",
-              outline: "none",
-            },
-            "&:focus": {
-              outline: "none",
-              backgroundColor: "rgba(34,197,94,0.15) !important",
-            },
           },
           "& .MuiPickersDay-root.Mui-selected": {
-            backgroundColor: "rgba(34,197,94,0.15)",
-            color: "#000",
-            border: "1px solid #2e6c33",
+            backgroundColor: "#2e6c33",
+            color: "#fff",
           },
           "& .MuiPickersDay-today": {
-            backgroundColor: "#2e6c33",
-            color: "white",
-          },
-          "& .MuiPickersDay-today:hover": {
-            backgroundColor: "#2e6c33 !important",
+            borderColor: "red",
           },
           "& .MuiPickersDay-today.Mui-selected": {
-            backgroundColor: "#2e6c33 !important",
-            color: "white !important",
-            border: "none",
+            color: "white",
+            borderColor: "red",
             "&:hover": {
-              backgroundColor: "#2e6c33 !important",
+              backgroundColor: "rgba(34,197,94,0.15)",
+              color: "#000",
             },
           },
         }}
