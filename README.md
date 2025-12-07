@@ -1,69 +1,87 @@
-# React + TypeScript + Vite
+# Scheduler App - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern single-page appointment scheduling application designed for beauty salons, and service-based businesses.
+This is the **frontend** part of the project (built with React, Vite and TypeScript).
+The main goal of this system is to help businesses manage clients, services, and visit scheduling through a simple and powerful UI.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 📅 Calendar & Scheduling
 
-## Expanding the ESLint configuration
+- Daily calendar view with time-slot grid
+- Create, edit, delete visits
+- Drag & drop visits between time slots (powered by **dnd-kit**)
+- Automatically detects overlapping times
+- Navigate between dates
+- Localized with **Dayjs** (EU format, week starts on Monday)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🛎 Services Management
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Create, edit and delete services
+- Supports duration, price and category
+- Smart validation (name + category uniqueness)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 👥 Clients Management
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Add, edit, delete clients
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 🏷 Categories & Employees
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Category and employee list loaded from backend
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### ⚡ Technology Stack
+
+- **React + Vite**
+- **TypeScript**
+- **Material UI (MUI)** - components
+- **TailwindCSS** - layout and styling
+- **RTK Query** - data fetching & caching
+- **Dayjs** - date/time handling
+- **dnd-kit** - drag & drop
+- **React Router**
+
+## ⚙️ Installation & Running Locally
+
+1. Clone the repository
+
+   ```
+   git clone https://github.com/tetianasvidrak/appointment-scheduler.git .
+   ```
+
+2. Install dependencies
+
+   ```
+   npm install
+   ```
+
+3. Add environment variables for backend integration
+
+   - Visit backend repository and follow steps from README before proceed with frontend:
+     `https://github.com/tetianasvidrak/appoinment-scheduler-be`
+
+   - Create .env file:
+
+     ```
+     VITE_API_URL=http://localhost:5000/api
+     ```
+
+4. Start development server
+   ```
+   npm run dev
+   ```
+
+The app will be available at: `http://localhost:5173`.
+
+## 🚀 Upcoming Features
+
+- User authentication
+
+- Multi-location support
+
+- SMS/Email reminders
+
+- Dark mode
+
+- Mobile responsive layout
+
+- Dashboard statistics
