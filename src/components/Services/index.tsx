@@ -5,12 +5,11 @@ import { ErrorOutline } from "@mui/icons-material";
 import { CustomButton } from "../CustomButton";
 import { ErrorMessage } from "../ErrorMessage";
 import { Modal } from "../Modal";
-import { ServiceFormModal } from "../ServiceFormModal";
+import { ServiceForm } from "../ServiceForm";
 import { ServiceList } from "../ServiceList";
 import { SkeletonList } from "../SkeletonList";
 
 import type { ServicePayload } from "../../model/service.model";
-import { durationOptions } from "../../constants/durationOptions";
 import {
   useAddServiceMutation,
   useDeleteServiceMutation,
@@ -18,7 +17,7 @@ import {
   useGetServicesQuery,
   useUpdateServiceMutation,
 } from "../../services/apiSlice";
-import type { ModalState, ServiceAction } from "./index.model";
+import type { ServiceAction } from "./index.model";
 import AddIcon from "@mui/icons-material/Add";
 
 export const Services = () => {
@@ -37,7 +36,7 @@ export const Services = () => {
   const [deleteService] = useDeleteServiceMutation();
   const isLoading = isLoadingCategories || isLoadingServices;
   const error = errorCategories || errorServices;
-  const [modal, setModal] = useState<ModalState | null>(null);
+  const [modal, setModal] = useState(false);
 
   const handleService = async (
     action: ServiceAction,
@@ -47,12 +46,12 @@ export const Services = () => {
     try {
       if (action === "create" && payload) {
         await addService(payload).unwrap();
-        setModal(null);
+        setModal(false);
       }
 
       if (action === "edit" && payload && id) {
         await updateService({ id, data: payload }).unwrap();
-        setModal(null);
+        setModal(false);
       }
 
       if (action === "delete" && id) {
@@ -75,39 +74,34 @@ export const Services = () => {
           </Typography>
 
           <CustomButton
-            disabled={!!errorServices || !!errorCategories}
+            disabled={!!error}
             round
             sx={{ height: 42, width: 42 }}
-            onClick={() => setModal({ type: "create" })}
+            onClick={() => setModal(true)}
           >
             <AddIcon fontSize="medium" />
           </CustomButton>
         </div>
-        {isLoading ? (
-          <SkeletonList />
-        ) : error ? (
+        {isLoading && <SkeletonList />}
+        {error && (
           <ErrorMessage message="Failed to load data...">
             <ErrorOutline fontSize="large" />
           </ErrorMessage>
-        ) : (
+        )}
+        {categories && services && (
           <ServiceList
-            mode="edit"
-            categories={categories ?? []}
-            services={services ?? []}
-            durationOptions={durationOptions}
-            onSubmit={(action, payload, id) =>
-              handleService(action, payload, id)
-            }
+            categories={categories}
+            services={services}
+            onSubmit={handleService}
           />
         )}
       </div>
       {modal && (
-        <Modal onClose={() => setModal(null)}>
-          <ServiceFormModal
+        <Modal onClose={() => setModal(false)}>
+          <ServiceForm
             mode="create"
-            durationOptions={durationOptions}
             onSubmit={(action, payload) => handleService(action, payload)}
-            onClose={() => setModal(null)}
+            onClose={() => setModal(false)}
           />
         </Modal>
       )}

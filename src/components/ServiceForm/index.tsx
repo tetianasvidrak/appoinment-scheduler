@@ -2,32 +2,25 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MenuItem, TextField } from "@mui/material";
 
-import type { ServiceFormModalProps } from "./index.model.ts";
-import { addServiceSchema } from "../../validation/serviceSchemas.ts";
+import type { ServiceFormProps, ServiceFormValues } from "./index.model.ts";
+import { serviceSchema } from "../../validation/serviceSchemas.ts";
 import { useGetCategoriesQuery } from "../../services/apiSlice.ts";
 import { CustomButton } from "../CustomButton/index.tsx";
 import type { ServicePayload } from "../../model/service.model.ts";
+import { durationOptions } from "../../constants/durationOptions.ts";
 
-type FormValues = {
-  name: string;
-  price: number;
-  duration: number;
-  categoryId: string;
-};
-
-export const ServiceFormModal = ({
+export const ServiceForm = ({
   mode,
   initialData,
-  durationOptions,
   onClose = () => {},
   onSubmit,
-}: ServiceFormModalProps) => {
+}: ServiceFormProps) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
-    resolver: yupResolver(addServiceSchema),
+  } = useForm<ServiceFormValues>({
+    resolver: yupResolver(serviceSchema),
     defaultValues: {
       name: initialData?.name || "",
       price: initialData?.price || 0,
@@ -37,7 +30,7 @@ export const ServiceFormModal = ({
   });
   const { data: categories } = useGetCategoriesQuery();
 
-  const submitHandler = (data: FormValues) => {
+  const submitHandler = (data: ServiceFormValues) => {
     const payload: ServicePayload = {
       name: data.name,
       category: data.categoryId,

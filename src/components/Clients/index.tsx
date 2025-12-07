@@ -92,13 +92,13 @@ export const Clients = () => {
           onSearch={(input: string) => searchClient(input)}
           disabled={isLoading || !!error}
         />
-        {isLoading ? (
-          <SkeletonList />
-        ) : error ? (
+        {isLoading && <SkeletonList />}
+        {error && (
           <ErrorMessage message="Failed to load data...">
             <ErrorOutline fontSize="large" />
           </ErrorMessage>
-        ) : (
+        )}
+        {filteredClients && (
           <ClientList
             mode="edit"
             clients={filteredClients}

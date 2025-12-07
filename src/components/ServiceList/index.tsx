@@ -5,17 +5,17 @@ import { Modal } from "../Modal";
 
 import type { ServiceType } from "../../model/service.model";
 import type { ServiceListProps } from "./index.model";
-import { ServiceFormModal } from "../ServiceFormModal";
+import { ServiceForm } from "../ServiceForm";
+import { durationOptions } from "../../constants/durationOptions";
 
 export const ServiceList = ({
-  mode,
   categories,
-  durationOptions,
   services,
   onSubmit,
 }: ServiceListProps) => {
-  const [selectedService, setSelectedService] =
-    React.useState<ServiceType | null>(null);
+  const [serviceToEdit, setServiceToEdit] = React.useState<ServiceType | null>(
+    null
+  );
 
   const categorizedServices = React.useMemo(() => {
     if (!categories) return [];
@@ -71,10 +71,14 @@ export const ServiceList = ({
                     "&:hover": {
                       backgroundColor: `${category.displayColor}`,
                       boxShadow: "0 6px 6px rgba(0,0,0,0.2)",
+
+                      "& .MuiBox-root > .MuiBox-root": {
+                        backgroundColor: "#fff",
+                      },
                     },
                   }}
                   className="rounded-2xl"
-                  onClick={() => setSelectedService(service)}
+                  onClick={() => setServiceToEdit(service)}
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Box
@@ -101,15 +105,14 @@ export const ServiceList = ({
           </div>
         ))}
       </CardContent>
-      {selectedService && (
-        <Modal onClose={() => setSelectedService(null)}>
-          <ServiceFormModal
-            mode={mode}
-            initialData={selectedService}
-            durationOptions={durationOptions}
+      {serviceToEdit && (
+        <Modal onClose={() => setServiceToEdit(null)}>
+          <ServiceForm
+            mode={"edit"}
+            initialData={serviceToEdit}
             onSubmit={(action, payload, id) => {
               onSubmit(action, payload, id);
-              setSelectedService(null);
+              setServiceToEdit(null);
             }}
           />
         </Modal>

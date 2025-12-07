@@ -22,7 +22,7 @@ type ClientModalState = {
 } | null;
 
 export const ClientList = ({ mode, clients, onSubmit }: ClientListProps) => {
-  const [selectedClientModal, setSelectedClientModal] =
+  const [selectedClient, setSelectedClient] =
     React.useState<ClientModalState>(null);
   return (
     <>
@@ -48,7 +48,7 @@ export const ClientList = ({ mode, clients, onSubmit }: ClientListProps) => {
                 backgroundColor: "rgba(59,130,246,0.1)",
               },
             }}
-            onClick={() => setSelectedClientModal({ type: "edit", client })}
+            onClick={() => setSelectedClient({ type: "edit", client })}
           >
             <ListItemIcon sx={{ minWidth: 28 }}>
               <FiberManualRecordIcon sx={{ fontSize: 10, color: "#3b82f6" }} />
@@ -79,7 +79,7 @@ export const ClientList = ({ mode, clients, onSubmit }: ClientListProps) => {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                setSelectedClientModal({ type: "delete", client });
+                setSelectedClient({ type: "delete", client });
               }}
             >
               <DeleteOutlinedIcon fontSize="small" />
@@ -87,22 +87,22 @@ export const ClientList = ({ mode, clients, onSubmit }: ClientListProps) => {
           </ListItem>
         ))}
       </List>
-      {selectedClientModal && selectedClientModal.type === "delete" && (
-        <Modal onClose={() => setSelectedClientModal(null)}>
+      {selectedClient && selectedClient.type === "delete" && (
+        <Modal onClose={() => setSelectedClient(null)}>
           <div className="flex flex-col items-center gap-6 p-4">
             <p>Are you sure you want to delete this client?</p>
             <div className="flex gap-4">
               <CustomButton
                 sx={{ fontSize: "16px" }}
-                onClick={() => setSelectedClientModal(null)}
+                onClick={() => setSelectedClient(null)}
               >
                 Cancel
               </CustomButton>
               <CustomButton
                 sx={{ fontSize: "16px" }}
                 onClick={() => {
-                  onSubmit("delete", undefined, selectedClientModal.client._id);
-                  setSelectedClientModal(null);
+                  onSubmit("delete", undefined, selectedClient.client._id);
+                  setSelectedClient(null);
                 }}
               >
                 Delete
@@ -111,16 +111,16 @@ export const ClientList = ({ mode, clients, onSubmit }: ClientListProps) => {
           </div>
         </Modal>
       )}
-      {selectedClientModal && selectedClientModal.type === "edit" && (
-        <Modal onClose={() => setSelectedClientModal(null)}>
+      {selectedClient && selectedClient.type === "edit" && (
+        <Modal onClose={() => setSelectedClient(null)}>
           <ClientFormModal
             mode={mode}
-            initialData={selectedClientModal.client}
+            initialData={selectedClient.client}
             onSubmit={(action, payload, id) => {
               onSubmit(action, payload, id);
-              setSelectedClientModal(null);
+              setSelectedClient(null);
             }}
-            onClose={() => setSelectedClientModal(null)}
+            onClose={() => setSelectedClient(null)}
           />
         </Modal>
       )}
