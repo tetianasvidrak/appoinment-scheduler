@@ -22,12 +22,25 @@ import {
   useUpdateVisitMutation,
 } from "../../services/apiSlice";
 import { checkSlotOccupation } from "./index.helper";
+import { SkeletonGridItem } from "../SkeletonGridItem";
+import { ErrorMessage } from "../ErrorMessage";
+import { ErrorOutline } from "@mui/icons-material";
 
 export default function Scheduler({ date }: SchedulerProps) {
   const formattedDate = date?.format("YYYY-MM-DD") ?? "";
 
-  const { data: visits = [] } = useGetVisitsQuery({ date: formattedDate });
-  const { data: employees = [] } = useGetEmployeesQuery();
+  const {
+    data: visits = [],
+    error: errorVisits,
+    isLoading: isLoadingVisits,
+  } = useGetVisitsQuery({
+    date: formattedDate,
+  });
+  const {
+    data: employees = [],
+    error: errorEmployees,
+    isLoading: isLoadingEmployees,
+  } = useGetEmployeesQuery();
   const { data: clients = [] } = useGetClientsQuery();
   const [addVisit] = useAddVisitMutation();
   const [updateVisit] = useUpdateVisitMutation();
@@ -142,55 +155,72 @@ export default function Scheduler({ date }: SchedulerProps) {
           {date?.format("dddd, DD")}
         </Typography>
       </div>
+
       <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin}>
-        <div className="grid grid-cols-[auto_1fr_1fr_1fr]">
-          <div></div>
-          {employees.map((e) => (
-            <div key={e._id} className="text-center font-semibold text-lg">
-              {e.name}
-            </div>
-          ))}
-          {times.map((time) => (
-            <React.Fragment key={time}>
-              <div className="text-right pr-2 mt-[-25%] text-sm text-gray-500">
-                {time}
-              </div>
-              {employees.map((e) => (
-                <TimeSlot
-                  key={e._id}
-                  visits={visits}
-                  employeeId={e._id}
-                  time={time}
-                  // occupied={checkSlotOccupation(visits, e._id, time)}
-                  onClick={() => {
-                    setModal({ type: "create", employeeId: e._id, time });
-                  }}
-                >
-                  {visits
-                    .filter((v) => {
-                      return v.employee._id === e._id && v.time === time;
-                    })
-                    .map((v) => (
-                      <Visit
-                        key={v._id}
-                        visit={v}
-                        visits={visits}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setModal({
-                            type: "edit",
-                            employeeId: v.employee._id,
-                            time: v.time,
-                            visit: v,
-                          });
-                        }}
-                      />
-                    ))}
-                </TimeSlot>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
+        {errorVisits ? (
+          <ErrorMessage message="Failed to load visits...">
+            <ErrorOutline fontSize="large" />
+          </ErrorMessage>
+        ) : (
+          <div className="grid grid-cols-[auto_1fr_1fr_1fr]">
+            <div></div>
+            {isLoadingEmployees ? (
+              <SkeletonGridItem count={employees.length || 3} />
+            ) : (
+              employees.map((e) => (
+                <div key={e._id} className="text-center font-semibold text-lg">
+                  {e.name}
+                </div>
+              ))
+            )}
+
+            {times.map((time) => (
+              <React.Fragment key={time}>
+                <div className="text-right pr-2 mt-[-25%] text-sm text-gray-500">
+                  {time}
+                </div>
+
+                {isLoadingVisits ? (
+                  <SkeletonGridItem count={employees.length || 3} height={40} />
+                ) : (
+                  employees.map((e) => (
+                    <TimeSlot
+                      key={e._id}
+                      visits={visits}
+                      employeeId={e._id}
+                      time={time}
+                      // occupied={checkSlotOccupation(visits, e._id, time)}
+                      onClick={() => {
+                        setModal({ type: "create", employeeId: e._id, time });
+                      }}
+                    >
+                      {visits
+                        .filter((v) => {
+                          return v.employee._id === e._id && v.time === time;
+                        })
+                        .map((v) => (
+                          <Visit
+                            key={v._id}
+                            visit={v}
+                            visits={visits}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setModal({
+                                type: "edit",
+                                employeeId: v.employee._id,
+                                time: v.time,
+                                visit: v,
+                              });
+                            }}
+                          />
+                        ))}
+                    </TimeSlot>
+                  ))
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </DndContext>
 
       {modal && (

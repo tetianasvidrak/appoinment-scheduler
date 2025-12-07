@@ -75,7 +75,7 @@ export const Services = () => {
           </Typography>
 
           <CustomButton
-            disabled={!!errorCategories}
+            disabled={!!errorServices || !!errorCategories}
             round
             sx={{ height: 42, width: 42 }}
             onClick={() => setModal({ type: "create" })}

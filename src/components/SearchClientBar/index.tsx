@@ -18,20 +18,31 @@ export default function SearchClientBar({
         "& .MuiOutlinedInput-root": {
           borderRadius: "20px",
           padding: "2px 10px",
-          "& fieldset": {
+
+          "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#949494",
           },
-          "&:hover fieldset": {
-            borderColor: "#949494",
+
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#2e6c33",
           },
-          "&.Mui-focused fieldset": {
-            borderColor: "#949494",
+
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#2e6c33",
+            borderWidth: "2px",
           },
+
+          "& svg": {
+            color: "#949494",
+            transition: "color 0.3s ease",
+          },
+
+          "&:hover svg, &.Mui-focused svg": {
+            color: "#2e6c33",
+          },
+
           "& input": {
             padding: "6px 8px",
-            color: "#949494",
-          },
-          "& svg": {
             color: "#949494",
           },
         },

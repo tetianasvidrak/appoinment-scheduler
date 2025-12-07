@@ -24,6 +24,13 @@ export const CustomButton = ({
         "&:hover": {
           filter: "brightness(1.2)",
         },
+        "&.Mui-disabled": {
+          backgroundColor: "#a3a3a3",
+          borderColor: "#a3a3a3",
+          color: "#e0e0e0",
+          cursor: "not-allowed",
+          pointerEvents: "auto",
+        },
         ...sx,
       }}
       {...props}
