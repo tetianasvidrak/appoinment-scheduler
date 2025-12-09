@@ -36,11 +36,8 @@ export default function Scheduler({ date }: SchedulerProps) {
   } = useGetVisitsQuery({
     date: formattedDate,
   });
-  const {
-    data: employees = [],
-    error: errorEmployees,
-    isLoading: isLoadingEmployees,
-  } = useGetEmployeesQuery();
+  const { data: employees = [], isLoading: isLoadingEmployees } =
+    useGetEmployeesQuery();
   const { data: clients = [] } = useGetClientsQuery();
   const [addVisit] = useAddVisitMutation();
   const [updateVisit] = useUpdateVisitMutation();

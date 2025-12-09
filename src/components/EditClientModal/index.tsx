@@ -115,7 +115,7 @@ export const EditClientModel = ({
         </div>
       </form>
       {modalDelete && (
-        <Modal handlerClick={() => setModalDelete(false)}>
+        <Modal onClose={() => setModalDelete(false)}>
           <div className="flex flex-col items-center gap-6 p-4">
             <p>Are you sure you want to delete this client?</p>
             <div className="flex gap-4">
