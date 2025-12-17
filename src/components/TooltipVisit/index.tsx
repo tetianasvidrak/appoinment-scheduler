@@ -11,7 +11,6 @@ export const TooltipVisit = ({
 }: TooltipVisitProps) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-  //   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (!targetRef.current) return;

@@ -18,8 +18,6 @@ export type VisitService = {
 export type VisitType = {
   _id: string;
   employee: EmployeeType;
-  // employeeId: EmployeeType;
-  // employeeId: string;
   client: ClientType;
   services: VisitService[];
   date?: string;

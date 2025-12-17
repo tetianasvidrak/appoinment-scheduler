@@ -13,8 +13,8 @@ export const Visit = ({ visit, visits, onClick }: VisitProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const combinedRef = (node: HTMLDivElement | null) => {
-    setNodeRef(node); // реф для dnd-kit
-    ref.current = node; // реф для tooltip
+    setNodeRef(node);
+    ref.current = node;
   };
 
   const employeeVisits = visits.filter(

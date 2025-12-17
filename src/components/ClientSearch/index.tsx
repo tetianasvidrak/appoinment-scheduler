@@ -43,14 +43,7 @@ export const ClientSearch = ({
           const { key, ...optionProps } = props;
           return (
             <li key={key} {...optionProps} style={{ width: "100%" }}>
-              <Box
-              // sx={{
-              //   display: "flex",
-              //   justifyContent: "space-between",
-              //   width: "100%",
-              //   padding: "8px 12px",
-              // }}
-              >
+              <Box>
                 <Typography>{option.name}</Typography>
                 <Typography color="text.secondary">{option.phone}</Typography>
               </Box>

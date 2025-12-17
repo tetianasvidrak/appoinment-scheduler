@@ -29,7 +29,6 @@ export const TimeSlot = ({
     <div
       ref={setNodeRef}
       onClick={onClick}
-      // className="border-b border-b-[#949494] h-12 flex justify-start relative cursor-pointer text-xs"
       className="border-b border-b-[#949494] h-10 flex justify-start relative cursor-pointer text-xs gap-0.5"
       style={{
         backgroundColor:
